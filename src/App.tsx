@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { LandingPage } from './pages/LandingPage';
@@ -200,6 +200,7 @@ function App() {
             <Sidebar 
               onNavigate={(page) => {
                 setCurrentPage(page);
+                setShowProgress(false); // Hide progress view when navigating
                 setShowMobileMenu(false);
               }}
               currentPage={currentPage}
