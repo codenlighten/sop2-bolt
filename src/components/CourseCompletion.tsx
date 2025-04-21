@@ -1,13 +1,18 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Award, CheckCircle, Download, Share2, ArrowRight, Trophy, Star } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
 import { SocialShare } from './SocialShare';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { useAuth } from '../context/AuthContext';
+import { getCertificate, requestCertificate } from '../utils/progressApi';
 
 export function CourseCompletion() {
   const { earnedCertificates, progress } = useProgress();
+  const { user } = useAuth();
   const confettiRef = useRef<HTMLCanvasElement>(null);
+  const [certificates, setCertificates] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (confettiRef.current) {
@@ -65,9 +70,37 @@ export function CourseCompletion() {
     }
   }, []);
 
+  // Load certificates from server
+  useEffect(() => {
+    const loadCertificates = async () => {
+      if (user?.email && earnedCertificates.length > 0) {
+        setLoading(true);
+        try {
+          // First ensure certificates are requested
+          await Promise.all(
+            earnedCertificates.map(() => requestCertificate(user.email))
+          );
+          
+          // Then fetch the certificate data
+          const certificateData = await Promise.all(
+            earnedCertificates.map(cert => getCertificate(cert.id))
+          );
+          setCertificates(certificateData.filter(c => c && c.id));
+        } catch (error) {
+          console.error('Error loading certificates:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadCertificates();
+  }, [user, earnedCertificates]);
+
   const downloadCertificate = async (certificateId: string) => {
     const certificate = earnedCertificates.find(c => c.id === certificateId);
     if (!certificate) return;
+    setLoading(true);
 
     // Create certificate element
     const certificateElement = document.createElement('div');
@@ -80,7 +113,7 @@ export function CourseCompletion() {
           This certifies that
         </p>
         <p style="font-size: 24px; font-weight: bold; margin-bottom: 30px;">
-          [Your Name]
+          ${user?.email || '[Your Name]'}
         </p>
         <p style="font-size: 16px; margin-bottom: 40px;">
           has successfully completed the comprehensive training program in
@@ -108,6 +141,8 @@ export function CourseCompletion() {
     } catch (error) {
       console.error('Error generating certificate:', error);
       alert('Failed to generate certificate. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -172,36 +207,52 @@ export function CourseCompletion() {
             <div>
               <h3 className="font-medium text-gray-900 mb-4">Your Certificates:</h3>
               <div className="space-y-4">
-                {earnedCertificates.map(cert => (
-                  <div 
-                    key={cert.id}
-                    className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h4 className="font-semibold text-gray-900">{cert.title}</h4>
-                        <p className="text-gray-600 mt-1">{cert.description}</p>
-                      </div>
-                      <Award className="w-8 h-8 text-blue-600" />
-                    </div>
-                    <div className="mt-4 flex items-center gap-4">
-                      <button
-                        onClick={() => downloadCertificate(cert.id)}
-                        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                      >
-                        <Download className="w-4 h-4" />
-                        <span>Download Certificate</span>
-                      </button>
-                      <button
-                        onClick={() => {/* Share functionality */}}
-                        className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
-                      >
-                        <Share2 className="w-4 h-4" />
-                        <span>Share</span>
-                      </button>
-                    </div>
+                {loading ? (
+                  <div className="text-center py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
+                    <p className="mt-2 text-gray-600">Loading certificates...</p>
                   </div>
-                ))}
+                ) : (
+                  earnedCertificates.map((cert, index) => (
+                    <div 
+                      key={cert.id}
+                      className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 border border-blue-200"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <h4 className="font-semibold text-gray-900">{cert.title}</h4>
+                          <p className="text-gray-600 mt-1">{cert.description}</p>
+                          {certificates[index] && (
+                            <div className="mt-2 text-sm text-gray-500">
+                              Certificate ID: {certificates[index].id || cert.id}
+                              {certificates[index].issueDate && (
+                                <span> • Issued: {new Date(certificates[index].issueDate).toLocaleDateString()}</span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <Award className="w-8 h-8 text-blue-600" />
+                      </div>
+                      <div className="mt-4 flex items-center gap-4">
+                        <button
+                          onClick={() => downloadCertificate(cert.id)}
+                          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                          disabled={loading}
+                        >
+                          <Download className="w-4 h-4" />
+                          <span>Download Certificate</span>
+                        </button>
+                        <button
+                          onClick={() => {/* Share functionality */}}
+                          className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                        >
+                          <Share2 className="w-4 h-4" />
+                          <span>Share</span>
+                        </button>
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
@@ -233,7 +284,10 @@ export function CourseCompletion() {
             {/* Share Achievement */}
             <div>
               <h3 className="font-medium text-gray-900 mb-4">Share Your Achievement:</h3>
-              <SocialShare />
+              <SocialShare 
+                title="I completed the Cryptocurrency Crime Investigation Training!"
+                description="I've earned certification in blockchain forensics, cryptocurrency crime investigation, and digital evidence handling."
+              />
             </div>
           </div>
         </div>

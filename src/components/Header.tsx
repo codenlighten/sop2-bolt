@@ -26,7 +26,7 @@ export function Header({ currentPage, onNavigate }: HeaderProps) {
           </div>
         </div>
         
-        <div className="flex items-center gap-2 md:gap-4">
+        <div className="flex items-center gap-2 md:gap-4 mr-20 md:mr-24">
           {prevChapter && (
             <button
               onClick={() => onNavigate(prevChapter.id)}

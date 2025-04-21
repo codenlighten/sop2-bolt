@@ -1,53 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Shield, Users, Star, CheckCircle, AlertTriangle, Mail, Building2, Globe } from 'lucide-react';
 
 export function PricingPlans() {
   const { user } = useAuth();
-  const [isLawEnforcement, setIsLawEnforcement] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<'standard' | 'law-enforcement'>('standard');
   const [showSuccess, setShowSuccess] = useState(false);
   const [department, setDepartment] = useState('');
   const [badgeNumber, setBadgeNumber] = useState('');
   const [preferredLocation, setPreferredLocation] = useState('');
   const [teamSize, setTeamSize] = useState('1');
-
-  // Initialize Stripe button
-  useEffect(() => {
-    const initializeStripeButton = () => {
-      const container = document.getElementById('stripe-button-container');
-      if (!container) return;
-
-      // Clear existing content
-      container.innerHTML = '';
-
-      // Create new button element
-      const button = document.createElement('stripe-buy-button');
-      button.setAttribute('buy-button-id', 'buy_btn_1R1XgPRtONmLrAcUD1BhCeP0');
-      button.setAttribute('publishable-key', import.meta.env.VITE_STRIPE_PUBLIC_KEY);
-
-      // Append button to container
-      container.appendChild(button);
-    };
-
-    // Initialize button when script is loaded
-    if ((window as any).StripeButtonElement) {
-      initializeStripeButton();
-    } else {
-      // Wait for script to load
-      const script = document.querySelector('script[src*="buy-button.js"]');
-      if (script) {
-        script.addEventListener('load', initializeStripeButton);
-      }
-    }
-
-    // Cleanup
-    return () => {
-      const script = document.querySelector('script[src*="buy-button.js"]');
-      if (script) {
-        script.removeEventListener('load', initializeStripeButton);
-      }
-    };
-  }, [isLawEnforcement]);
 
   const handleMasterclassRequest = () => {
     const subject = encodeURIComponent('Masterclass Reservation Request - Cryptocurrency Crime Investigation');
@@ -57,9 +19,8 @@ Dear SmartLedger Team,
 I would like to reserve a spot for the upcoming Cryptocurrency Crime Investigation Masterclass.
 
 Professional Details:
-${isLawEnforcement ? '- Law Enforcement Officer' : '- Industry Professional'}
-${department ? `- Department/Organization: ${department}` : ''}
-${badgeNumber ? `- Badge/ID Number: ${badgeNumber}` : ''}
+- Department/Organization: ${department}
+- Badge/ID Number: ${badgeNumber}
 
 Contact Information:
 - Name: ${user?.email?.split('@')[0] || ''}
@@ -68,11 +29,6 @@ Contact Information:
 Training Requirements:
 - Number of Attendees: ${teamSize}
 - Preferred Location: ${preferredLocation || 'Flexible'}
-
-Additional Information:
-- Pricing Tier: ${isLawEnforcement ? 'Law Enforcement ($500)' : 'Standard ($2,500)'}
-- Training Format: In-Person Masterclass
-- Duration: 5 Days Intensive Training
 
 Please provide information about:
 1. Upcoming masterclass dates and locations
@@ -99,19 +55,6 @@ ${user?.email?.split('@')[0] || 'Prospective Attendee'}
         <p className="mt-4 text-xl text-gray-600">
           Choose the training program that best fits your needs
         </p>
-      </div>
-
-      {/* Law Enforcement Verification */}
-      <div className="mt-8 flex justify-center">
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={isLawEnforcement}
-            onChange={(e) => setIsLawEnforcement(e.target.checked)}
-            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-          />
-          <span className="text-gray-700">I am a law enforcement officer</span>
-        </label>
       </div>
 
       {/* Success Message */}
@@ -143,17 +86,65 @@ ${user?.email?.split('@')[0] || 'Prospective Attendee'}
               </div>
             </div>
 
-            <div className="mt-6">
-              <div className="flex items-baseline">
-                <span className="text-4xl font-extrabold text-gray-900">
-                  ${isLawEnforcement ? '50' : '500'}
-                </span>
-                <span className="ml-1 text-gray-500">/lifetime access</span>
+            <div className="mt-6 space-y-4">
+              {/* Plan Selection Tabs */}
+              <div className="flex border border-gray-200 rounded-lg overflow-hidden">
+                <button
+                  className={`flex-1 py-2 px-4 text-sm font-medium ${
+                    selectedPlan === 'standard' 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                  }`}
+                  onClick={() => setSelectedPlan('standard')}
+                >
+                  Standard
+                </button>
+                <button
+                  className={`flex-1 py-2 px-4 text-sm font-medium ${
+                    selectedPlan === 'law-enforcement' 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                  }`}
+                  onClick={() => setSelectedPlan('law-enforcement')}
+                >
+                  Law Enforcement
+                </button>
               </div>
-              {isLawEnforcement && (
-                <p className="mt-1 text-sm text-green-600">
-                  Special law enforcement pricing
-                </p>
+
+              {/* Standard Pricing */}
+              {selectedPlan === 'standard' && (
+                <div className="p-4 bg-white rounded-lg border border-gray-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold text-gray-900">Standard Access</h4>
+                    <span className="text-2xl font-bold text-gray-900">$500</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-4">Complete course access with standard features and support</p>
+                  <div>
+                    <stripe-buy-button
+                      buy-button-id="buy_btn_1R1XgPRtONmLrAcUD1BhCeP0"
+                      publishable-key="pk_live_51PM96FRtONmLrAcUFyuYL2gKeSIVjRhqRPATlfUNMJJ4CEVcEISX8kVLRLOwCoD4t2jBrJQnKtvb4jcUO3vTzTYf006zenj43T"
+                    >
+                    </stripe-buy-button>
+                  </div>
+                </div>
+              )}
+
+              {/* Law Enforcement Pricing */}
+              {selectedPlan === 'law-enforcement' && (
+                <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="font-semibold text-blue-900">Law Enforcement Special Rate</h4>
+                    <span className="text-2xl font-bold text-blue-900">$50</span>
+                  </div>
+                  <p className="text-sm text-blue-700 mb-4">Special pricing for verified law enforcement professionals</p>
+                  <div>
+                    <stripe-buy-button
+                      buy-button-id="buy_btn_1R1Xf3RtONmLrAcUykcNNSIj"
+                      publishable-key="pk_live_51PM96FRtONmLrAcUFyuYL2gKeSIVjRhqRPATlfUNMJJ4CEVcEISX8kVLRLOwCoD4t2jBrJQnKtvb4jcUO3vTzTYf006zenj43T"
+                    >
+                    </stripe-buy-button>
+                  </div>
+                </div>
               )}
             </div>
 
@@ -175,9 +166,6 @@ ${user?.email?.split('@')[0] || 'Prospective Attendee'}
                 <span>Certification upon completion</span>
               </li>
             </ul>
-
-            {/* Stripe Buy Button Container */}
-            <div id="stripe-button-container" className="mt-8"></div>
           </div>
         </div>
 
@@ -199,54 +187,51 @@ ${user?.email?.split('@')[0] || 'Prospective Attendee'}
             <div className="mt-6">
               <div className="flex items-baseline">
                 <span className="text-4xl font-extrabold text-gray-900">
-                  ${isLawEnforcement ? '500' : '2,500'}
+                  $500
                 </span>
                 <span className="ml-1 text-gray-500">/attendee</span>
               </div>
-              {isLawEnforcement && (
-                <p className="mt-1 text-sm text-green-600">
-                  Special law enforcement pricing
-                </p>
-              )}
+              <p className="mt-1 text-sm text-green-600">
+                Special law enforcement pricing
+              </p>
+              <p className="mt-1 text-sm text-gray-500">
+                <s>$2,500 regular price</s>
+              </p>
             </div>
 
             {/* Additional Information Fields */}
             <div className="mt-6 space-y-4">
-              {isLawEnforcement && (
-                <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Department/Agency
-                    </label>
-                    <div className="relative">
-                      <Building2 className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                      <input
-                        type="text"
-                        value={department}
-                        onChange={(e) => setDepartment(e.target.value)}
-                        className="pl-10 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                        placeholder="Enter your department"
-                      />
-                    </div>
-                  </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Department/Agency
+                </label>
+                <div className="relative">
+                  <Building2 className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
+                    className="pl-10 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    placeholder="Enter your department"
+                  />
+                </div>
+              </div>
 
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Badge/ID Number
-                    </label>
-                    <div className="relative">
-                      <Shield className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-                      <input
-                        type="text"
-                        value={badgeNumber}
-                        onChange={(e) => setBadgeNumber(e.target.value)}
-                        className="pl-10 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                        placeholder="Enter your badge number"
-                      />
-                    </div>
-                  </div>
-                </>
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Badge/ID Number
+                </label>
+                <div className="relative">
+                  <Shield className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={badgeNumber}
+                    onChange={(e) => setBadgeNumber(e.target.value)}
+                    className="pl-10 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    placeholder="Enter your badge number"
+                  />
+                </div>
+              </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -328,6 +313,7 @@ ${user?.email?.split('@')[0] || 'Prospective Attendee'}
             <div>
               <h4 className="font-medium text-blue-900">Important Notes:</h4>
               <ul className="mt-2 space-y-2 text-blue-800">
+                <li>After purchase, you'll receive an access code via email to unlock the course</li>
                 <li>Law enforcement pricing requires verification with an official email domain</li>
                 <li>In-person masterclass dates and locations will be announced after registration</li>
                 <li>Group discounts available for departments sending multiple officers</li>

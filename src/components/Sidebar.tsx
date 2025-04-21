@@ -2,7 +2,7 @@ import React from 'react';
 import { chapters } from '../data/chapters';
 import { useProgress } from '../context/ProgressContext';
 import * as Icons from 'lucide-react';
-import { Award, ChevronRight, CheckCircle } from 'lucide-react';
+import { Award, ChevronRight, CheckCircle, AlignCenterVertical as Certificate } from 'lucide-react';
 
 interface SidebarProps {
   onNavigate: (page: string) => void;
@@ -77,6 +77,20 @@ export function Sidebar({ onNavigate, currentPage, onShowProgress }: SidebarProp
             </button>
           );
         })}
+
+        <button
+          onClick={() => onNavigate('certificates')}
+          className={`w-full text-left flex items-center gap-3 px-4 py-3 hover:bg-slate-700 transition-colors ${
+            currentPage === 'certificates' ? 'bg-slate-700' : ''
+          }`}
+        >
+          <Certificate className="w-5 h-5" />
+          <div className="flex-1">
+            <div className="font-medium">Certificates</div>
+            <div className="text-sm text-slate-400">View your earned certificates</div>
+          </div>
+          <ChevronRight className="w-4 h-4 text-slate-500" />
+        </button>
 
         <button
           onClick={onShowProgress}

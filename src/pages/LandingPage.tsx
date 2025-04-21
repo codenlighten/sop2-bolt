@@ -39,7 +39,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
               onClick={onStart}
               className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 text-lg font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2"
             >
-              Begin Free Training
+              Register/Login
               <ArrowRight className="w-5 h-5" />
             </button>
             <a 
@@ -85,21 +85,6 @@ export function LandingPage({ onStart }: LandingPageProps) {
             <div className="text-4xl font-bold text-yellow-600 mb-2">2</div>
             <div className="text-gray-600">Certifications</div>
           </div>
-        </div>
-      </div>
-
-      {/* Learning Paths Section */}
-      <div id="paths" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Choose Your Learning Path
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Select a structured learning path tailored to your role and experience level
-            </p>
-          </div>
-          <LearningPathSelector onSelect={onStart} />
         </div>
       </div>
 
@@ -188,11 +173,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
             <div className="md:w-1/3">
               <div className="relative">
                 <div className="absolute inset-0 bg-blue-600 rounded-full transform -rotate-6"></div>
-                <img 
-                  src="https://media.licdn.com/dms/image/v2/D4D03AQF_OrHUqBbBqQ/profile-displayphoto-shrink_800_800/0/1678541355576?e=1746662400&v=beta&t=j4vUkQwWozEfMyaDkiVLd76p-ze97qYY9e5rZ1vtAvg"
-                  alt="Bryan Daugherty"
-                  className="relative w-48 h-48 mx-auto rounded-full object-cover border-4 border-white shadow-xl"
-                />
+                <div className="relative w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-200 flex items-center justify-center">
+                  <Shield className="w-16 h-16 text-gray-400" />
+                </div>
               </div>
             </div>
             
@@ -245,11 +228,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
             <div className="md:w-1/3">
               <div className="relative">
                 <div className="absolute inset-0 bg-blue-600 rounded-full transform rotate-6"></div>
-                <img 
-                  src="https://media.licdn.com/dms/image/v2/C5603AQHGW4AZr9IRzw/profile-displayphoto-shrink_800_800/0/1553333568761?e=1746662400&v=beta&t=Ok-XtQzYAoC5kqQrxGtlr4QBb_F43KniktYqOXmI5G4"
-                  alt="Tyler Fayard"
-                  className="relative w-48 h-48 mx-auto rounded-full object-cover border-4 border-white shadow-xl"
-                />
+                <div className="relative w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-200 flex items-center justify-center">
+                  <Search className="w-16 h-16 text-gray-400" />
+                </div>
               </div>
             </div>
             

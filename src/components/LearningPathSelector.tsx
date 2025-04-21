@@ -96,23 +96,13 @@ export function LearningPathSelector({ onSelect }: LearningPathSelectorProps) {
                 </div>
               </div>
 
-              {pathProgress === 0 && !user ? (
-                <div id={`path-${path.id}-button`}>
-                  <stripe-buy-button
-                    buy-button-id="buy_btn_1R1XgPRtONmLrAcUD1BhCeP0"
-                    publishable-key={import.meta.env.VITE_STRIPE_PUBLIC_KEY}
-                  >
-                  </stripe-buy-button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => onSelect(path.id)}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                >
-                  {pathProgress > 0 ? 'Continue Path' : 'Start Path'}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              )}
+              <button
+                onClick={() => onSelect(path.id)}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                {pathProgress > 0 ? 'Continue Path' : 'Start Path'}
+                <ArrowRight className="w-4 h-4" />
+              </button>
             </div>
           </div>
         );

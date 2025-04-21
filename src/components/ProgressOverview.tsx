@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useProgress } from '../context/ProgressContext';
 import { BadgeDisplay } from './BadgeDisplay';
 import { CertificateDisplay } from './CertificateDisplay';
 import { AnalyticsDashboard } from './AnalyticsDashboard';
 import { ExportProgress } from './ExportProgress';
-import { Shield, Award, ArrowRight, CheckCircle, Book, Clock, Brain } from 'lucide-react';
+import { Shield, Award, ArrowRight, CheckCircle, Book, Clock, Brain, Loader } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { checkCompletion } from '../utils/progressApi';
 
 export function ProgressOverview() {
   const { 
@@ -14,6 +16,27 @@ export function ProgressOverview() {
     checkBadgeEligibility,
     checkCertificateEligibility
   } = useProgress();
+  const { user } = useAuth();
+  const [serverCompletion, setServerCompletion] = useState<{ completed: boolean; date?: string } | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchCompletionStatus = async () => {
+      if (user?.email) {
+        setLoading(true);
+        try {
+          const completionStatus = await checkCompletion(user.email);
+          setServerCompletion(completionStatus);
+        } catch (error) {
+          console.error('Error fetching completion status:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchCompletionStatus();
+  }, [user]);
 
   const calculateBadgeProgress = (badgeId: string) => {
     const badge = earnedBadges.find(b => b.id === badgeId);
@@ -78,6 +101,45 @@ export function ProgressOverview() {
           </div>
         </div>
 
+        {/* Server Completion Status */}
+        {user?.email && (
+          <div className="mb-8">
+            <div className={`p-4 rounded-lg border ${
+              loading 
+                ? 'bg-gray-50 border-gray-200' 
+                : serverCompletion?.completed 
+                  ? 'bg-green-50 border-green-200' 
+                  : 'bg-blue-50 border-blue-200'
+            }`}>
+              <div className="flex items-center gap-3">
+                {loading ? (
+                  <Loader className="w-5 h-5 text-gray-500 animate-spin" />
+                ) : serverCompletion?.completed ? (
+                  <CheckCircle className="w-5 h-5 text-green-600" />
+                ) : (
+                  <Award className="w-5 h-5 text-blue-600" />
+                )}
+                <div>
+                  <h4 className="font-medium text-gray-900">
+                    {loading 
+                      ? 'Checking completion status...' 
+                      : serverCompletion?.completed 
+                        ? 'Course Completed!' 
+                        : 'Course Progress'}
+                  </h4>
+                  <p className="text-gray-600">
+                    {loading 
+                      ? 'Retrieving your latest progress from the server...' 
+                      : serverCompletion?.completed 
+                        ? `Completed on ${new Date(serverCompletion.date || '').toLocaleDateString()}` 
+                        : 'Your progress is being synced with the server.'}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Export Section */}
         <div className="mb-8">
           <ExportProgress />
@@ -115,8 +177,10 @@ export function ProgressOverview() {
                 earned={checkCertificateEligibility(certificate.id)}
                 progress={{
                   earnedBadges: earnedBadges.length,
-                  totalScore: Object.values(progress.quizScores).reduce((a, b) => a + b, 0) / 
-                    Object.keys(progress.quizScores).length
+                  totalScore: Object.values(progress.quizScores).length > 0
+                    ? Object.values(progress.quizScores).reduce((a, b) => a + b, 0) / 
+                      Object.values(progress.quizScores).length
+                    : 0
                 }}
               />
             ))}

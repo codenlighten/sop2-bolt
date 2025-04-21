@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { LandingPage } from './pages/LandingPage';
@@ -16,18 +16,116 @@ import { ProgressOverview } from './components/ProgressOverview';
 import { ChapterCompletion } from './components/ChapterCompletion';
 import { CourseCompletion } from './components/CourseCompletion';
 import { AuthForm } from './components/AuthForm';
+import { AccessCodeForm } from './components/AccessCodeForm';
+import { BadgeNotification } from './components/BadgeNotification';
+import { Certificates } from './pages/Certificates';
 import { chapters } from './data/chapters';
-import { X, Menu } from 'lucide-react';
+import { X, Menu, LogOut } from 'lucide-react';
 import { useProgress } from './context/ProgressContext';
 import { useAuth } from './context/AuthContext';
+import { requestCertificate } from './utils/progressApi';
+import { badges } from './data/badges';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('landing');
   const [showProgress, setShowProgress] = useState(false);
   const [showCompletion, setShowCompletion] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const { completeChapter, isCourseCompleted } = useProgress();
-  const { user, loading } = useAuth();
+  const [hasCourseAccess, setHasCourseAccess] = useState(false);
+  const { completeChapter, isCourseCompleted, progress, earnedBadges } = useProgress();
+  const { user, loading, signOut } = useAuth();
+  const [newBadge, setNewBadge] = useState<string | null>(null);
+  const [previousBadges, setPreviousBadges] = useState<string[]>([]);
+
+  // Check for access code in URL parameters and course access on mount
+  useEffect(() => {
+    const checkAccessCode = async () => {
+      // Check URL for access_code parameter
+      const urlParams = new URLSearchParams(window.location.search);
+      const accessCodeParam = urlParams.get('access_code');
+      
+      if (accessCodeParam) {
+        try {
+          // Verify the access code with the API
+          const email=localStorage.email||"";
+          const response = await fetch(`https://smart-certs-npkd4.ondigitalocean.app/api/purchases/access/${accessCodeParam}?email=${email}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          });
+          
+          if (response.ok) {
+            // Store access in localStorage
+            localStorage.setItem('courseAccess', 'true');
+            localStorage.setItem('accessCode', accessCodeParam);
+            setHasCourseAccess(true);
+            
+            // Remove the access_code parameter from URL without refreshing
+            const newUrl = window.location.pathname + window.location.hash;
+            window.history.replaceState({}, document.title, newUrl);
+            
+            // If on landing page, redirect to introduction
+            if (currentPage === 'landing') {
+              setCurrentPage('introduction');
+            }
+          }
+        } catch (error) {
+          console.error('Error verifying access code:', error);
+        }
+      }
+      
+      // Check localStorage for existing access
+      const storedAccess = localStorage.getItem('courseAccess');
+      if (storedAccess === 'true') {
+        setHasCourseAccess(true);
+      }
+    };
+    
+    checkAccessCode();
+  }, [currentPage]);
+
+  // Check if course is completed and request certificate
+  useEffect(() => {
+    const checkCourseCompletion = async () => {
+      // Check if all chapters are completed
+      const allChaptersCompleted = chapters.every(chapter => 
+        progress.completedChapters.includes(chapter.id)
+      );
+      
+      // If all chapters are completed and user is logged in, request certificate
+      if (allChaptersCompleted && user?.email) {
+        try {
+          await requestCertificate(user.email);
+          console.log('Certificate requested for completed course');
+        } catch (error) {
+          console.error('Error requesting certificate:', error);
+        }
+      }
+    };
+    
+    checkCourseCompletion();
+  }, [progress.completedChapters, user]);
+
+  // Check for newly earned badges
+  useEffect(() => {
+    if (previousBadges.length === 0 && earnedBadges.length > 0) {
+      // First load, just store the current badges
+      setPreviousBadges(earnedBadges.map(b => b.id));
+    } else if (earnedBadges.length > previousBadges.length) {
+      // Find the new badge(s)
+      const newBadgeIds = earnedBadges
+        .map(b => b.id)
+        .filter(id => !previousBadges.includes(id));
+      
+      if (newBadgeIds.length > 0) {
+        // Show notification for the first new badge
+        setNewBadge(newBadgeIds[0]);
+        // Update previous badges
+        setPreviousBadges(earnedBadges.map(b => b.id));
+      }
+    }
+  }, [earnedBadges, previousBadges]);
 
   const handleStart = () => {
     setCurrentPage('introduction');
@@ -49,6 +147,16 @@ function App() {
     }
   };
 
+  const handleLogout = async () => {
+    await signOut();
+    setCurrentPage('landing');
+  };
+
+  const handleAccessGranted = () => {
+    setHasCourseAccess(true);
+    setCurrentPage('introduction');
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -59,6 +167,11 @@ function App() {
 
   if (!user && currentPage !== 'landing') {
     return <AuthForm />;
+  }
+
+  // If user is logged in but doesn't have course access and not on landing page
+  if (user && !hasCourseAccess && currentPage !== 'landing') {
+    return <AccessCodeForm onSuccess={handleAccessGranted} />;
   }
 
   return (
@@ -101,6 +214,24 @@ function App() {
             currentPage={currentPage} 
             onNavigate={setCurrentPage}
           />
+
+          {user && (
+            <div className="fixed top-16 right-4 z-30 md:right-6">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-gray-600 max-w-[200px] truncate">
+                  {user.email}
+                </span>
+                <button
+                  onClick={handleLogout}
+                  className="p-2 bg-white rounded-lg shadow-md border border-gray-200 hover:bg-gray-100 flex items-center gap-1"
+                  title="Logout"
+                >
+                  <LogOut className="w-4 h-4 text-gray-700" />
+                  <span className="text-xs font-medium">Logout</span>
+                </button>
+              </div>
+            </div>
+          )}
         </>
       )}
       
@@ -125,15 +256,23 @@ function App() {
         )}
       </main>
 
-      {showCompletion && currentChapter && (
+      {showCompletion && (
         <ChapterCompletion 
-          chapter={currentChapter}
+          chapter={chapters.find(c => c.id === currentPage)!}
           onContinue={handleContinue}
         />
       )}
 
       {isCourseCompleted && (
         <CourseCompletion />
+      )}
+
+      {/* Badge notification */}
+      {newBadge && (
+        <BadgeNotification 
+          badge={badges.find(b => b.id === newBadge)!} 
+          onClose={() => setNewBadge(null)}
+        />
       )}
     </div>
   );
@@ -160,6 +299,8 @@ function App() {
         return <LegalFramework onComplete={handleChapterComplete} />;
       case 'future-trends':
         return <FutureTrends onComplete={handleChapterComplete} />;
+      case 'certificates':
+        return <Certificates />;
       default:
         return <LandingPage onStart={handleStart} />;
     }

@@ -11,7 +11,7 @@ interface QuizQuestion {
 
 interface QuizCardProps {
   questions: QuizQuestion[];
-  moduleId: string;
+  moduleId?: string;
 }
 
 export function QuizCard({ questions, moduleId }: QuizCardProps) {
@@ -37,9 +37,15 @@ export function QuizCard({ questions, moduleId }: QuizCardProps) {
       const correctAnswers = newAnswers.filter((answer, index) => 
         answer === questions[index].correctAnswer
       ).length;
-      const finalScore = (correctAnswers / questions.length) * 100;
+      const finalScore = Math.round((correctAnswers / questions.length) * 100);
       setScore(finalScore);
-      updateQuizScore(moduleId, finalScore);
+      
+      // Ensure moduleId is valid before updating score
+      if (moduleId && moduleId !== 'undefined') {
+        updateQuizScore(moduleId, finalScore);
+      } else {
+        console.error('Invalid moduleId provided to QuizCard:', moduleId);
+      }
     }
   };
 

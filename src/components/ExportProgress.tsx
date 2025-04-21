@@ -1,20 +1,45 @@
-import React, { useRef } from 'react';
-import { Download, FileText, Award, CheckCircle } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { Download, FileText, Award, CheckCircle, Loader } from 'lucide-react';
 import { useProgress } from '../context/ProgressContext';
 import { useAnalytics } from '../context/AnalyticsContext';
+import { useAuth } from '../context/AuthContext';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { checkCompletion } from '../utils/progressApi';
 
 export function ExportProgress() {
   const { progress, earnedBadges, earnedCertificates } = useProgress();
   const { getAnalytics } = useAnalytics();
+  const { user } = useAuth();
   const analytics = getAnalytics();
   const reportRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
+  const [completionStatus, setCompletionStatus] = useState<{ completed: boolean; date?: string } | null>(null);
+
+  const checkServerCompletion = async () => {
+    if (!user?.email) return;
+    
+    setLoading(true);
+    try {
+      const status = await checkCompletion(user.email);
+      setCompletionStatus(status);
+    } catch (error) {
+      console.error('Error checking completion status:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const exportToPDF = async () => {
     if (!reportRef.current) return;
+    setLoading(true);
 
     try {
+      // Check completion status first
+      if (user?.email && !completionStatus) {
+        await checkServerCompletion();
+      }
+
       const canvas = await html2canvas(reportRef.current, {
         scale: 2,
         useCORS: true,
@@ -47,15 +72,19 @@ export function ExportProgress() {
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Failed to generate PDF. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const exportToJSON = () => {
     const data = {
+      user: user?.email || 'anonymous',
       progress,
-      earnedBadges,
-      earnedCertificates,
-      analytics: analytics || {}
+      earnedBadges: earnedBadges.map(badge => badge.id),
+      earnedCertificates: earnedCertificates.map(cert => cert.id),
+      analytics: analytics || {},
+      serverCompletion: completionStatus
     };
 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -84,9 +113,13 @@ export function ExportProgress() {
             Overall Progress
           </h2>
           <div className="mb-6">
+            <p className="mb-2">User: {user?.email || 'Anonymous User'}</p>
             <p className="mb-2">Chapters Completed: {progress.completedChapters.length}/10</p>
             <p className="mb-2">Badges Earned: {earnedBadges.length}/10</p>
             <p className="mb-2">Certificates Earned: {earnedCertificates.length}/2</p>
+            {completionStatus?.completed && (
+              <p className="mb-2">Course Completed: {new Date(completionStatus.date || '').toLocaleDateString()}</p>
+            )}
           </div>
 
           <h2 className="text-xl font-semibold text-blue-900 mb-4">
@@ -157,20 +190,41 @@ export function ExportProgress() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <button
           onClick={exportToPDF}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          disabled={loading}
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <FileText className="w-5 h-5" />
-          <span>Export as PDF</span>
+          {loading ? (
+            <>
+              <Loader className="w-5 h-5 animate-spin" />
+              <span>Generating PDF...</span>
+            </>
+          ) : (
+            <>
+              <FileText className="w-5 h-5" />
+              <span>Export as PDF</span>
+            </>
+          )}
         </button>
 
         <button
           onClick={exportToJSON}
-          className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+          disabled={loading}
+          className="flex items-center justify-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Download className="w-5 h-5" />
           <span>Export Raw Data</span>
         </button>
       </div>
+
+      {user?.email && !completionStatus && !loading && (
+        <button
+          onClick={checkServerCompletion}
+          className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+        >
+          <CheckCircle className="w-5 h-5" />
+          <span>Verify Completion Status</span>
+        </button>
+      )}
 
       <div className="mt-4 bg-blue-50 rounded-lg p-4 border border-blue-200">
         <div className="flex items-start gap-3">

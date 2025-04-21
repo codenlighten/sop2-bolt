@@ -4,6 +4,8 @@ import { BlockchainSimulationCard } from '../components/BlockchainSimulationCard
 import { BlockchainPuzzle } from '../components/BlockchainPuzzle';
 import { WalletTypes } from '../components/WalletTypes';
 import { QuizCard } from '../components/QuizCard';
+import { ChapterBadges } from '../components/ChapterBadges';
+import { chapters } from '../data/chapters';
 import { 
   Link,
   ShieldCheck,
@@ -18,7 +20,7 @@ const quizQuestions = [
   {
     question: "What is a blockchain?",
     options: [
-      "A type of database that stores encrypted transaction records",
+      "A type of database that stores immutable transaction records",
       "A private financial ledger",
       "A physical chain used to secure cryptocurrency",
       "A program that controls Bitcoin"
@@ -39,7 +41,9 @@ const quizQuestions = [
   }
 ];
 
-export function BlockchainFundamentals() {
+export function BlockchainFundamentals({ onComplete }: { onComplete?: () => void }) {
+  const blockchainChapter = chapters.find(c => c.id === 'crypto-basics');
+  
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-12">
@@ -134,8 +138,17 @@ export function BlockchainFundamentals() {
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
             Knowledge Check: Understanding Blockchain Technology
           </h2>
-          <QuizCard questions={quizQuestions} />
+          <QuizCard questions={quizQuestions} moduleId="crypto_basics" />
         </section>
+
+        {blockchainChapter && (
+          <section className="mb-12">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+              Badges for this Chapter
+            </h2>
+            <ChapterBadges chapter={blockchainChapter} />
+          </section>
+        )}
 
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
@@ -165,6 +178,16 @@ export function BlockchainFundamentals() {
             </ul>
           </div>
         </section>
+
+        <div className="flex justify-end mt-8">
+          <button
+            onClick={onComplete}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+          >
+            Complete Chapter
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );

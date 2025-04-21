@@ -3,8 +3,6 @@ import { BlockchainVisualizer } from '../components/BlockchainVisualizer';
 import { ChallengeCard } from '../components/ChallengeCard';
 import { QuizCard } from '../components/QuizCard';
 import { CaseStudyTimeline } from '../components/CaseStudyTimeline';
-import { ChapterBadges } from '../components/ChapterBadges';
-import { chapters } from '../data/chapters';
 import { 
   Shield, 
   Globe2, 
@@ -40,8 +38,6 @@ const quizQuestions = [
 ];
 
 export function Introduction({ onComplete }: { onComplete?: () => void }) {
-  const introductionChapter = chapters.find(c => c.id === 'introduction');
-  
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-12">
@@ -306,15 +302,6 @@ export function Introduction({ onComplete }: { onComplete?: () => void }) {
           </h2>
           <QuizCard questions={quizQuestions} moduleId="introduction" />
         </section>
-
-        {introductionChapter && (
-          <section className="mb-12">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-              Badges for this Chapter
-            </h2>
-            <ChapterBadges chapter={introductionChapter} />
-          </section>
-        )}
 
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">

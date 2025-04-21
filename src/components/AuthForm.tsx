@@ -3,14 +3,25 @@ import { useAuth } from '../context/AuthContext';
 import { Shield, Mail, Lock, AlertTriangle, Loader, ArrowLeft, CheckCircle, Eye, EyeOff } from 'lucide-react';
 
 export function AuthForm() {
-  const { signIn, signUp, resetPassword } = useAuth();
+  const { signIn, signUp, verifyOtp, resetPassword } = useAuth();
   const [mode, setMode] = useState<'signin' | 'signup' | 'reset'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [otp, setOtp] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showOtpForm, setShowOtpForm] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+
+  // Check for access_code in URL on mount
+  React.useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessCode = urlParams.get('access_code');
+    if (accessCode) {
+      localStorage.setItem('accessCode', accessCode);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +36,11 @@ export function AuthForm() {
         } else {
           setResetSent(true);
         }
+      } else if (showOtpForm) {
+        const { error } = await verifyOtp(email, otp);
+        if (error) {
+          setError(error.message);
+        }
       } else {
         const { error } = mode === 'signup' 
           ? await signUp(email, password)
@@ -32,6 +48,8 @@ export function AuthForm() {
 
         if (error) {
           setError(error.message);
+        } else if (mode === 'signup') {
+          setShowOtpForm(true);
         }
       }
     } catch (err) {
@@ -50,18 +68,22 @@ export function AuthForm() {
             <Shield className="w-10 h-10 text-white" />
           </div>
           <h2 className="text-3xl font-extrabold text-gray-900">
-            {mode === 'signup' 
-              ? 'Create your account'
-              : mode === 'reset'
-                ? 'Reset your password'
-                : 'Welcome back'}
+            {showOtpForm
+              ? 'Verify Your Account'
+              : mode === 'signup' 
+                ? 'Create your account'
+                : mode === 'reset'
+                  ? 'Reset your password'
+                  : 'Welcome back'}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
-            {mode === 'signup'
-              ? 'Join the cryptocurrency crime investigation training program'
-              : mode === 'reset'
-                ? 'Enter your email to receive reset instructions'
-                : 'Sign in to access your training progress'}
+            {showOtpForm
+              ? 'Enter the verification code sent to your email'
+              : mode === 'signup'
+                ? 'Join the cryptocurrency crime investigation training program'
+                : mode === 'reset'
+                  ? 'Enter your email to receive reset instructions'
+                  : 'Sign in to access your training progress'}
           </p>
         </div>
 
@@ -102,12 +124,31 @@ export function AuthForm() {
                     className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     placeholder="you@example.com"
                     required
+                    disabled={showOtpForm}
                   />
                   <Mail className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                 </div>
               </div>
 
-              {mode !== 'reset' && (
+              {showOtpForm ? (
+                <div>
+                  <label htmlFor="otp" className="block text-sm font-medium text-gray-700">
+                    Verification Code
+                  </label>
+                  <div className="mt-1 relative">
+                    <input
+                      id="otp"
+                      type="text"
+                      value={otp}
+                      onChange={(e) => setOtp(e.target.value)}
+                      className="appearance-none block w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Enter verification code"
+                      required
+                    />
+                    <Lock className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+                  </div>
+                </div>
+              ) : mode !== 'reset' && (
                 <div>
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                     Password
@@ -160,17 +201,37 @@ export function AuthForm() {
                   </>
                 ) : (
                   <span>
-                    {mode === 'signup' 
-                      ? 'Create Account' 
-                      : mode === 'reset'
-                        ? 'Send Reset Instructions'
-                        : 'Sign In'}
+                    {showOtpForm
+                      ? 'Verify Account'
+                      : mode === 'signup' 
+                        ? 'Create Account' 
+                        : mode === 'reset'
+                          ? 'Send Reset Instructions'
+                          : 'Sign In'}
                   </span>
                 )}
               </button>
 
+              {showOtpForm && (
+                <div className="text-center">
+                  <p className="text-sm text-gray-600 mb-2">
+                    Didn't receive the code?
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowOtpForm(false);
+                      setMode('signup');
+                    }}
+                    className="text-sm text-blue-600 hover:text-blue-700"
+                  >
+                    Try again
+                  </button>
+                </div>
+              )}
+
               <div className="space-y-4">
-                {mode === 'signin' && (
+                {mode === 'signin' && !showOtpForm && (
                   <button
                     type="button"
                     onClick={() => setMode('reset')}
@@ -185,16 +246,20 @@ export function AuthForm() {
                   </div>
                   <div className="relative flex justify-center text-sm">
                     <span className="px-2 bg-white text-gray-500">
-                      {mode === 'signup' ? 'Already have an account?' : 'Need an account?'}
+                      {showOtpForm ? 'Having trouble?' : mode === 'signup' ? 'Already have an account?' : 'Need an account?'}
                     </span>
                   </div>
                 </div>
                 <button
                   type="button"
-                  onClick={() => setMode(mode === 'signup' ? 'signin' : 'signup')}
+                  onClick={() => {
+                    setMode(mode === 'signup' ? 'signin' : 'signup');
+                    setShowOtpForm(false);
+                    setError(null);
+                  }}
                   className="w-full flex items-center justify-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
-                  {mode === 'signup' ? 'Sign In' : 'Create Account'}
+                  {showOtpForm ? 'Back to Sign In' : mode === 'signup' ? 'Sign In' : 'Create Account'}
                 </button>
               </div>
             </form>

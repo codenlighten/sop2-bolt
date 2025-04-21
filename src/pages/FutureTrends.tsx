@@ -110,7 +110,7 @@ function CrimeTechniqueCard({
   );
 }
 
-export function FutureTrends() {
+export function FutureTrends({ onComplete }: { onComplete?: () => void }) {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-12">
@@ -129,7 +129,7 @@ export function FutureTrends() {
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
             10.2 Knowledge Check: Future Trends
           </h2>
-          <QuizCard questions={quizQuestions} />
+          <QuizCard questions={quizQuestions} moduleId="future_trends" />
         </section>
 
         <section className="mb-12">
@@ -311,6 +311,16 @@ export function FutureTrends() {
             </div>
           </div>
         </section>
+
+        <div className="flex justify-end mt-8">
+          <button
+            onClick={onComplete}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
+          >
+            Complete Chapter
+            <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
   );
