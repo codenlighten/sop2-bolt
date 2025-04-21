@@ -181,7 +181,8 @@ export async function loadAllProgress(email: string): Promise<User['progress'] |
       simulationScores: simulationScores || {},
       timeSpent: overall.timeSpent || {},
       completedExercises: overall.completedExercises || [],
-      failedAttempts: {}
+      failedAttempts: {},
+      lastAccessed: overall.lastAccessed || new Date().toISOString()
     };
   } catch (error) {
     console.error('Error loading progress:', error);
