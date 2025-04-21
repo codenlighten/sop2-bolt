@@ -28,7 +28,8 @@ const initialProgress: User['progress'] = {
   simulationScores: {},
   timeSpent: {},
   completedExercises: [],
-  failedAttempts: {}
+  failedAttempts: {},
+  lastAccessed: ''
 };
 
 const loadProgress = (): User['progress'] => {
