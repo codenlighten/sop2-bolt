@@ -10,7 +10,8 @@ export const badges: Badge[] = [
     requirements: [
       { type: 'quiz', threshold: 80, moduleId: 'introduction' }
     ],
-    tier: 'bronze'
+    tier: 'bronze',
+    points: 10
   },
   
   // Chapter 2: Blockchain Fundamentals
@@ -23,7 +24,8 @@ export const badges: Badge[] = [
       { type: 'quiz', threshold: 90, moduleId: 'blockchain_fundamentals' },
       { type: 'simulation', threshold: 85, moduleId: 'blockchain_puzzle' }
     ],
-    tier: 'silver'
+    tier: 'silver',
+    points: 25
   },
 
   // Chapter 3: Criminal Activity
@@ -36,7 +38,8 @@ export const badges: Badge[] = [
       { type: 'simulation', threshold: 90, moduleId: 'transaction_pattern' },
       { type: 'exercise', threshold: 85, moduleId: 'suspicious_transaction' }
     ],
-    tier: 'gold'
+    tier: 'gold',
+    points: 50
   },
 
   // Chapter 4: Crime Scene
@@ -49,7 +52,8 @@ export const badges: Badge[] = [
       { type: 'simulation', threshold: 85, moduleId: 'crime_scene' },
       { type: 'exercise', threshold: 90, moduleId: 'evidence_analyzer' }
     ],
-    tier: 'silver'
+    tier: 'silver',
+    points: 25
   },
 
   // Chapter 5: Asset Recovery
@@ -62,7 +66,8 @@ export const badges: Badge[] = [
       { type: 'simulation', threshold: 90, moduleId: 'forensic_tracer' },
       { type: 'exercise', threshold: 85, moduleId: 'money_flow' }
     ],
-    tier: 'gold'
+    tier: 'gold',
+    points: 50
   },
 
   // Chapter 6: International Cooperation
@@ -75,7 +80,8 @@ export const badges: Badge[] = [
       { type: 'simulation', threshold: 85, moduleId: 'international_request' },
       { type: 'quiz', threshold: 90, moduleId: 'international' }
     ],
-    tier: 'silver'
+    tier: 'silver',
+    points: 25
   },
 
   // Chapter 7: Financial Collaboration
@@ -88,7 +94,8 @@ export const badges: Badge[] = [
       { type: 'simulation', threshold: 90, moduleId: 'sar_filing' },
       { type: 'exercise', threshold: 85, moduleId: 'banking_ai' }
     ],
-    tier: 'gold'
+    tier: 'gold',
+    points: 50
   },
 
   // Chapter 8: Specialized Units
@@ -101,7 +108,8 @@ export const badges: Badge[] = [
       { type: 'simulation', threshold: 90, moduleId: 'crypto_unit' },
       { type: 'exercise', threshold: 85, moduleId: 'tool_selection' }
     ],
-    tier: 'gold'
+    tier: 'gold',
+    points: 50
   },
 
   // Chapter 9: Legal Framework
@@ -114,7 +122,8 @@ export const badges: Badge[] = [
       { type: 'simulation', threshold: 85, moduleId: 'courtroom' },
       { type: 'quiz', threshold: 90, moduleId: 'legal' }
     ],
-    tier: 'silver'
+    tier: 'silver',
+    points: 25
   },
 
   // Chapter 10: Future Trends
@@ -127,6 +136,7 @@ export const badges: Badge[] = [
       { type: 'simulation', threshold: 90, moduleId: 'emerging_threats' },
       { type: 'quiz', threshold: 85, moduleId: 'future_trends' }
     ],
-    tier: 'gold'
+    tier: 'gold',
+    points: 50
   }
 ];
