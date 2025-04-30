@@ -1,8 +1,30 @@
-import React from 'react';
-import { Shield, ArrowRight, Book, Users, Globe, Scale, Database, Brain, Search, Lock, Award, CheckCircle, Briefcase, Star, FileText, Mail, Linkedin, ExternalLink, Twitter, Clock, BadgeCheck } from 'lucide-react';
-import { SocialShare } from '../components/SocialShare';
-import { PricingPlans } from '../components/PricingPlans';
-import { LearningPathSelector } from '../components/LearningPathSelector';
+import React from "react";
+import {
+  Shield,
+  ArrowRight,
+  Book,
+  Users,
+  Globe,
+  Scale,
+  Database,
+  Brain,
+  Search,
+  Lock,
+  Award,
+  CheckCircle,
+  Briefcase,
+  Star,
+  FileText,
+  Mail,
+  Linkedin,
+  ExternalLink,
+  Twitter,
+  Clock,
+  BadgeCheck,
+} from "lucide-react";
+import { SocialShare } from "../components/SocialShare";
+import { PricingPlans } from "../components/PricingPlans";
+import { LearningPathSelector } from "../components/LearningPathSelector";
 
 interface LandingPageProps {
   onStart: () => void;
@@ -30,19 +52,20 @@ export function LandingPage({ onStart }: LandingPageProps) {
             Standard Operating Procedures
           </p>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-12 animate-fade-in-up delay-200">
-            Master blockchain forensics, evidence collection, and digital asset recovery with our
-            comprehensive training program designed for law enforcement professionals.
+            Master blockchain forensics, evidence collection, and digital asset
+            recovery with our comprehensive training program designed for law
+            enforcement professionals.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-300">
-            <button 
+            <button
               onClick={onStart}
               className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl hover:from-blue-700 hover:to-blue-800 text-lg font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center gap-2"
             >
               Register/Login
               <ArrowRight className="w-5 h-5" />
             </button>
-            <a 
+            <a
               href="#features"
               className="px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-gray-50 text-lg font-semibold border-2 border-blue-100 transition-all flex items-center gap-2"
             >
@@ -96,8 +119,8 @@ export function LandingPage({ onStart }: LandingPageProps) {
               Comprehensive Training Program
             </h2>
             <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-              Learn everything you need to know about cryptocurrency crime investigation
-              through our structured, hands-on curriculum.
+              Learn everything you need to know about cryptocurrency crime
+              investigation through our structured, hands-on curriculum.
             </p>
           </div>
 
@@ -106,49 +129,57 @@ export function LandingPage({ onStart }: LandingPageProps) {
               {
                 icon: Database,
                 title: "Blockchain Analysis",
-                description: "Master cryptocurrency tracing techniques and forensic investigation methods",
+                description:
+                  "Master cryptocurrency tracing techniques and forensic investigation methods",
                 features: [
                   "Transaction pattern analysis",
                   "Wallet clustering techniques",
                   "Cross-chain tracking",
-                  "Mixer detection"
-                ]
+                  "Mixer detection",
+                ],
               },
               {
                 icon: Shield,
                 title: "Evidence Collection",
-                description: "Learn proper procedures for securing and analyzing digital evidence",
+                description:
+                  "Learn proper procedures for securing and analyzing digital evidence",
                 features: [
                   "Hardware wallet seizure",
                   "Chain of custody",
                   "Mobile device forensics",
-                  "Documentation standards"
-                ]
+                  "Documentation standards",
+                ],
               },
               {
                 icon: Globe,
                 title: "International Operations",
-                description: "Navigate cross-border investigations and legal frameworks",
+                description:
+                  "Navigate cross-border investigations and legal frameworks",
                 features: [
                   "MLAT procedures",
                   "Agency cooperation",
                   "Asset recovery",
-                  "Jurisdictional challenges"
-                ]
-              }
+                  "Jurisdictional challenges",
+                ],
+              },
             ].map((feature, index) => (
-              <div 
+              <div
                 key={index}
                 className="bg-slate-800 rounded-xl p-8 hover:bg-slate-700 transition-colors duration-300"
               >
                 <div className="w-14 h-14 bg-blue-900 rounded-xl flex items-center justify-center mb-6">
                   <feature.icon className="w-8 h-8 text-blue-400" />
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-4">{feature.title}</h3>
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  {feature.title}
+                </h3>
                 <p className="text-slate-300 mb-6">{feature.description}</p>
                 <ul className="space-y-3">
                   {feature.features.map((item, i) => (
-                    <li key={i} className="flex items-center gap-2 text-slate-300">
+                    <li
+                      key={i}
+                      className="flex items-center gap-2 text-slate-300"
+                    >
                       <BadgeCheck className="w-5 h-5 text-blue-400 flex-shrink-0" />
                       <span>{item}</span>
                     </li>
@@ -178,45 +209,65 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 </div>
               </div>
             </div>
-            
+
             <div className="md:w-2/3">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
                 About the Author
               </h2>
               <p className="text-gray-600 mb-6">
-                Bryan Daugherty is a trailblazer in blockchain innovation and cybersecurity, with over 20 years in enterprise technology. As a Subject Matter Expert for the U.S. Department of Defense's CSIAC and Global Public Policy Director, he shapes blockchain policy across 30+ countries and advises on cybersecurity.
+                Bryan Daugherty is a trailblazer in blockchain innovation and
+                cybersecurity, with over 20 years in enterprise technology. As a
+                Subject Matter Expert for the U.S. Department of Defense's CSIAC
+                and Global Public Policy Director, he shapes blockchain policy
+                across 30+ countries and advises on cybersecurity.
               </p>
-              
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-start gap-2">
                   <Briefcase className="w-5 h-5 text-gray-800 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-800 text-sm">DoD Expert</h3>
-                    <p className="text-sm text-gray-600">INTERPOL Challenge Coin recipient</p>
+                    <h3 className="font-semibold text-gray-800 text-sm">
+                      DoD Expert
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      INTERPOL Challenge Coin recipient
+                    </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-2">
                   <Globe className="w-5 h-5 text-gray-800 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-800 text-sm">Policy Leader</h3>
-                    <p className="text-sm text-gray-600">U.S. Congress testimony</p>
+                    <h3 className="font-semibold text-gray-800 text-sm">
+                      Policy Leader
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      U.S. Congress testimony
+                    </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-2">
                   <Star className="w-5 h-5 text-gray-800 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-800 text-sm">Industry Pioneer</h3>
-                    <p className="text-sm text-gray-600">SmartLedger & CERTIHASH founder</p>
+                    <h3 className="font-semibold text-gray-800 text-sm">
+                      Industry Pioneer
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      SmartLedger & CERTIHASH founder
+                    </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-start gap-2">
                   <FileText className="w-5 h-5 text-gray-800 flex-shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-semibold text-gray-800 text-sm">Thought Leader</h3>
-                    <p className="text-sm text-gray-600">Featured in Forbes & WSJ</p>
+                    <h3 className="font-semibold text-gray-800 text-sm">
+                      Thought Leader
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      Featured in Forbes & WSJ
+                    </p>
                   </div>
                 </div>
               </div>
@@ -233,49 +284,70 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 </div>
               </div>
             </div>
-            
+
             <div className="md:w-2/3">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
                 Chief Cryptocurrency Forensics Investigator & Trainer
               </h2>
               <p className="text-gray-600 mb-6">
-                Tyler Fayard is a relentless blockchain forensics analyst, renowned for tracking and recovering illicit assets in some of the most high-profile cryptocurrency thefts. With a strong engineering foundation and years of hands-on experience, he has pioneered advanced tracing techniques that have led to the recovery of billions in stolen digital assets across decentralized networks.
+                Tyler Fayard is a relentless blockchain forensics analyst,
+                renowned for tracking and recovering illicit assets in some of
+                the most high-profile cryptocurrency thefts. With a strong
+                engineering foundation and years of hands-on experience, he has
+                pioneered advanced tracing techniques that have led to the
+                recovery of billions in stolen digital assets across
+                decentralized networks.
               </p>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div className="bg-white rounded-lg p-4 border border-gray-200">
                   <div className="flex items-start gap-2">
                     <Database className="w-5 h-5 text-blue-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-semibold text-gray-800">Forensics Specialist</h3>
-                      <p className="text-sm text-gray-600">Innovating new methodologies to trace and analyze complex blockchain transactions</p>
+                      <h3 className="font-semibold text-gray-800">
+                        Forensics Specialist
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Innovating new methodologies to trace and analyze
+                        complex blockchain transactions
+                      </p>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="bg-white rounded-lg p-4 border border-gray-200">
                   <div className="flex items-start gap-2">
                     <Shield className="w-5 h-5 text-blue-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-semibold text-gray-800">Asset Recovery Expert</h3>
-                      <p className="text-sm text-gray-600">Successfully recovered billions in misappropriated cryptocurrency assets</p>
+                      <h3 className="font-semibold text-gray-800">
+                        Asset Recovery Expert
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Successfully recovered billions in misappropriated
+                        cryptocurrency assets
+                      </p>
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="bg-white rounded-lg p-4 border border-gray-200">
                   <div className="flex items-start gap-2">
                     <Star className="w-5 h-5 text-blue-600 flex-shrink-0 mt-1" />
                     <div>
-                      <h3 className="font-semibold text-gray-800">Industry Authority</h3>
-                      <p className="text-sm text-gray-600">Recognized thought leader featured in major blockchain publications</p>
+                      <h3 className="font-semibold text-gray-800">
+                        Industry Authority
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Recognized thought leader featured in major blockchain
+                        publications
+                      </p>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center gap-6">
-                <a 
+                <a
                   href="https://www.linkedin.com/in/tylerfayard/"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -284,7 +356,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
                   <Linkedin className="w-5 h-5" />
                   <span className="font-medium">LinkedIn</span>
                 </a>
-                <a 
+                <a
                   href="https://x.com/BoringSleuth"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -308,7 +380,10 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 Innovating Justice in the Digital Age
               </h2>
               <p className="text-lg text-slate-300 mb-8">
-                Justice demands trust, transparency, and security. Blockchain technology is revolutionizing law enforcement—preserving legal evidence, enhancing collaboration, and ensuring accountability like never before.
+                Justice demands trust, transparency, and security. Blockchain
+                technology is revolutionizing law enforcement—preserving legal
+                evidence, enhancing collaboration, and ensuring accountability
+                like never before.
               </p>
               <div className="bg-slate-800 rounded-lg p-6 mb-8">
                 <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
@@ -316,9 +391,10 @@ export function LandingPage({ onStart }: LandingPageProps) {
                   Free eBook: Innovating Justice
                 </h3>
                 <p className="text-slate-300 mb-4">
-                  Get your on-chain copy of the complete guide to blockchain-powered law enforcement.
+                  Get your on-chain copy of the complete guide to
+                  blockchain-powered law enforcement.
                 </p>
-                <a 
+                <a
                   href="https://web3media.org/media/85c715101f565e4580ad5a26d7f98f2c70993967eed88552d1a810e2da4fba75/0"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -331,7 +407,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
               <div className="flex items-center gap-2 text-sm text-slate-400">
                 <Lock className="w-4 h-4" />
                 <span>Verified on-chain:</span>
-                <a 
+                <a
                   href="https://whatsonchain.com/tx/85c715101f565e4580ad5a26d7f98f2c70993967eed88552d1a810e2da4fba75"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -380,29 +456,31 @@ export function LandingPage({ onStart }: LandingPageProps) {
         <div className="max-w-7xl mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Shield className="w-6 h-6 text-slate-800" />
-            <span className="text-xl font-semibold text-slate-900">SmartLedger</span>
+            <span className="text-xl font-semibold text-slate-900">
+              SmartLedger
+            </span>
           </div>
           <div className="flex items-center justify-center gap-6 mb-4">
-            <a 
-              href="https://x.com/BWDaugherty" 
-              target="_blank" 
+            <a
+              href="https://x.com/Smart_Ledger"
+              target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-slate-800 hover:text-slate-900"
             >
               <Twitter className="w-5 h-5" />
               <span className="font-medium">@BWDaugherty</span>
             </a>
-            <a 
-              href="https://www.linkedin.com/in/bwdaugherty/" 
-              target="_blank" 
+            <a
+              href="https://www.linkedin.com/company/73814824"
+              target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-slate-800 hover:text-slate-900"
             >
               <Linkedin className="w-5 h-5" />
               <span className="font-medium">LinkedIn</span>
             </a>
-            <a 
-              href="mailto:bryan@smartledger.solutions"
+            <a
+              href="mailto:yourfriends@smartledger.solutions"
               className="flex items-center gap-2 text-slate-800 hover:text-slate-900"
             >
               <Mail className="w-5 h-5" />
@@ -412,7 +490,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
           <div className="text-slate-600">
             <span>© 2025</span>
             <span className="mx-2">|</span>
-            <a 
+            <a
               href="https://smartledger.solutions"
               target="_blank"
               rel="noopener noreferrer"
