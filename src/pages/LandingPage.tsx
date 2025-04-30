@@ -468,7 +468,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
               className="flex items-center gap-2 text-slate-800 hover:text-slate-900"
             >
               <Twitter className="w-5 h-5" />
-              <span className="font-medium">@BWDaugherty</span>
+              <span className="font-medium">@Smart_Ledger</span>
             </a>
             <a
               href="https://www.linkedin.com/company/73814824"
