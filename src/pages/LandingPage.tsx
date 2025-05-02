@@ -1,14 +1,11 @@
-import React from "react";
+/** @jsxImportSource react */
 import {
-  Shield,
   ArrowRight,
   Book,
   Users,
   Globe,
-  Scale,
   Database,
   Brain,
-  Search,
   Lock,
   Award,
   CheckCircle,
@@ -22,7 +19,6 @@ import {
   Clock,
   BadgeCheck,
 } from "lucide-react";
-import { SocialShare } from "../components/SocialShare";
 import { PricingPlans } from "../components/PricingPlans";
 import { LearningPathSelector } from "../components/LearningPathSelector";
 
@@ -38,9 +34,12 @@ export function LandingPage({ onStart }: LandingPageProps) {
         <div className="text-center">
           <div className="flex justify-center mb-8">
             <div className="relative">
-              <div className="absolute inset-0 bg-blue-500 rounded-full blur-2xl opacity-20 animate-pulse"></div>
-              <div className="relative w-24 h-24 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg flex items-center justify-center transform hover:rotate-6 transition-transform duration-300">
-                <Shield className="w-14 h-14 text-white" />
+              <div className="relative w-32 h-32 flex items-center justify-center transform hover:rotate-6 transition-transform duration-300">
+                <img
+                  src="/shield.png"
+                  className="w-32 h-32"
+                  alt="Security Shield"
+                />
               </div>
             </div>
           </div>
@@ -139,7 +138,13 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 ],
               },
               {
-                icon: Shield,
+                icon: () => (
+                  <img
+                    src="/shield.png"
+                    className="w-8 h-8"
+                    alt="Security Shield"
+                  />
+                ),
                 title: "Evidence Collection",
                 description:
                   "Learn proper procedures for securing and analyzing digital evidence",
@@ -317,7 +322,11 @@ export function LandingPage({ onStart }: LandingPageProps) {
 
                 <div className="bg-white rounded-lg p-4 border border-gray-200">
                   <div className="flex items-start gap-2">
-                    <Shield className="w-5 h-5 text-blue-600 flex-shrink-0 mt-1" />
+                    <img
+                      src="/shield.png"
+                      className="w-5 h-5 text-blue-600 flex-shrink-0 mt-1"
+                      alt="Security Shield"
+                    />
                     <div>
                       <h3 className="font-semibold text-gray-800">
                         Asset Recovery Expert
@@ -419,7 +428,11 @@ export function LandingPage({ onStart }: LandingPageProps) {
             </div>
             <div className="grid grid-cols-2 gap-6">
               <div className="bg-slate-800 p-6 rounded-lg">
-                <Shield className="w-8 h-8 text-blue-400 mb-4" />
+                <img
+                  src="/shield.png"
+                  className="w-8 h-8 text-blue-400 mb-4"
+                  alt="Security Shield"
+                />
                 <h3 className="font-semibold mb-2">Immutable Evidence</h3>
                 <p className="text-slate-300 text-sm">
                   Preserve legal evidence with tamper-proof blockchain records
@@ -455,7 +468,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
       <footer className="bg-slate-50 border-t border-slate-200 py-12">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Shield className="w-6 h-6 text-slate-800" />
+            <img src="/shield.png" className="w-6 h-6" alt="Security Shield" />
             <span className="text-xl font-semibold text-slate-900">
               SmartLedger
             </span>
@@ -488,7 +501,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
             </a>
           </div>
           <div className="text-slate-600">
-            <span>© 2025</span>
+            <span>&copy; 2025</span>
             <span className="mx-2">|</span>
             <a
               href="https://smartledger.solutions"
