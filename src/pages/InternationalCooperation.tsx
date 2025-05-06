@@ -1,20 +1,15 @@
-import React from 'react';
 import { GlobalCryptoMap } from '../components/GlobalCryptoMap';
 import { InternationalInvestigationSimulator } from '../components/InternationalInvestigationSimulator';
 import { QuizCard } from '../components/QuizCard';
 import {
   Globe,
-  AlertTriangle,
   ArrowRight,
   Building2,
   Scale,
-  FileText,
   Shield,
-  Lock,
   ExternalLink,
   Users,
-  Handshake,
-  BadgeHelp
+  Handshake
 } from 'lucide-react';
 
 const quizQuestions = [

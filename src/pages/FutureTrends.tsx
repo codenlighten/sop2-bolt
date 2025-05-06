@@ -1,4 +1,3 @@
-import React from 'react';
 import { EmergingThreatsSimulator } from '../components/EmergingThreatsSimulator';
 import { CrossChainAnalyzer } from '../components/CrossChainAnalyzer';
 import { QuizCard } from '../components/QuizCard';
@@ -11,12 +10,9 @@ import {
   Lock, 
   Globe, 
   Laptop, 
-  Wallet, 
-  Code, 
   Cuboid as Cube, 
   Fingerprint, 
-  BadgeCheck, 
-  Building2 
+  BadgeCheck 
 } from 'lucide-react';
 
 const quizQuestions = [

@@ -1,4 +1,3 @@
-import React from 'react';
 import { SarFilingExercise } from '../components/SarFilingExercise';
 import { BankingTransactionAI } from '../components/BankingTransactionAI';
 import { DeFiFraudSandbox } from '../components/DeFiFraudSandbox';
@@ -6,15 +5,12 @@ import { CrossExaminationGame } from '../components/CrossExaminationGame';
 import { QuizCard } from '../components/QuizCard';
 import {
   Building2,
-  AlertTriangle,
   ArrowRight,
-  FileText,
   Shield,
   Globe,
   Lock,
   BadgeCheck,
   Database,
-  Search,
   Users,
   Handshake
 } from 'lucide-react';

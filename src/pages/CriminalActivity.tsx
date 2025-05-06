@@ -1,23 +1,31 @@
-import React from 'react';
-import { TransactionPatternGame } from '../components/TransactionPatternGame';
-import { SuspiciousTransactionSimulator } from '../components/SuspiciousTransactionSimulator';
-import { CryptoScamAnalyzer } from '../components/CryptoScamAnalyzer';
-import { QuizCard } from '../components/QuizCard';
-import { ChapterBadges } from '../components/ChapterBadges';
-import { chapters } from '../data/chapters';
-import { Users, Pill as Pills, ShieldAlert, Banknote, ArrowRight, AlertTriangle, Search, Shield } from 'lucide-react';
+import { TransactionPatternGame } from "../components/TransactionPatternGame";
+import { SuspiciousTransactionSimulator } from "../components/SuspiciousTransactionSimulator";
+import { CryptoScamAnalyzer } from "../components/CryptoScamAnalyzer";
+import { QuizCard } from "../components/QuizCard";
+import { ChapterBadges } from "../components/ChapterBadges";
+import { chapters } from "../data/chapters";
+import {
+  Users,
+  Pill as Pills,
+  ShieldAlert,
+  Banknote,
+  ArrowRight,
+  AlertTriangle,
+} from "lucide-react";
 
 const quizQuestions = [
   {
-    question: "Which of these is a red flag for potential human trafficking using cryptocurrency?",
+    question:
+      "Which of these is a red flag for potential human trafficking using cryptocurrency?",
     options: [
       "Large purchases of NFTs",
       "Small, frequent transactions between multiple wallets",
       "Depositing funds into centralized exchanges",
-      "Buying Bitcoin with a credit card"
+      "Buying Bitcoin with a credit card",
     ],
     correctAnswer: 1,
-    explanation: "Small, frequent transactions between multiple wallets are often associated with human trafficking operations, as they represent regular payments for illicit services while trying to avoid detection thresholds."
+    explanation:
+      "Small, frequent transactions between multiple wallets are often associated with human trafficking operations, as they represent regular payments for illicit services while trying to avoid detection thresholds.",
   },
   {
     question: "Which of these crimes is commonly associated with Monero (XMR)?",
@@ -25,19 +33,20 @@ const quizQuestions = [
       "Investment fraud",
       "Ransomware payments",
       "NFT scams",
-      "Identity theft"
+      "Identity theft",
     ],
     correctAnswer: 1,
-    explanation: "Ransomware attackers often demand payment in Monero (XMR) because its privacy features make transactions untraceable, unlike Bitcoin which leaves a public transaction trail."
-  }
+    explanation:
+      "Ransomware attackers often demand payment in Monero (XMR) because its privacy features make transactions untraceable, unlike Bitcoin which leaves a public transaction trail.",
+  },
 ];
 
-function CrimeTypeCard({ 
-  icon: Icon, 
-  title, 
-  description, 
-  redFlags 
-}: { 
+function CrimeTypeCard({
+  icon: Icon,
+  title,
+  description,
+  redFlags,
+}: {
   icon: typeof Users;
   title: string;
   description: React.ReactNode;
@@ -56,7 +65,10 @@ function CrimeTypeCard({
             <h4 className="font-medium text-gray-900 mb-2">Red Flags:</h4>
             <ul className="space-y-2">
               {redFlags.map((flag, index) => (
-                <li key={index} className="flex items-start gap-2 text-gray-600">
+                <li
+                  key={index}
+                  className="flex items-start gap-2 text-gray-600"
+                >
                   <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                   <span>{flag}</span>
                 </li>
@@ -70,8 +82,10 @@ function CrimeTypeCard({
 }
 
 export function CriminalActivity({ onComplete }: { onComplete?: () => void }) {
-  const criminalActivityChapter = chapters.find(c => c.id === 'criminal-activity');
-  
+  const criminalActivityChapter = chapters.find(
+    (c) => c.id === "criminal-activity"
+  );
+
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-12">
@@ -85,9 +99,10 @@ export function CriminalActivity({ onComplete }: { onComplete?: () => void }) {
           </h2>
           <div className="prose prose-blue max-w-none mb-6">
             <p>
-              Learn to identify potentially illegal cryptocurrency transactions by analyzing
-              patterns, amounts, and risk indicators. This skill is crucial for law enforcement
-              officers investigating crypto-related crimes.
+              Learn to identify potentially illegal cryptocurrency transactions
+              by analyzing patterns, amounts, and risk indicators. This skill is
+              crucial for law enforcement officers investigating crypto-related
+              crimes.
             </p>
           </div>
           <SuspiciousTransactionSimulator />
@@ -121,7 +136,7 @@ export function CriminalActivity({ onComplete }: { onComplete?: () => void }) {
                 "Frequent small-value transactions to multiple wallets",
                 "Transactions in high-risk geographic regions",
                 "Dark web advertisements with crypto payment options",
-                "Unusual transactions linked to escort services"
+                "Unusual transactions linked to escort services",
               ]}
             />
 
@@ -133,7 +148,7 @@ export function CriminalActivity({ onComplete }: { onComplete?: () => void }) {
                 "Multiple small transactions leading to single withdrawal",
                 "Darknet marketplace wallet addresses",
                 "Suspicious packages correlated with crypto transactions",
-                "Local P2P cash-to-crypto exchanges"
+                "Local P2P cash-to-crypto exchanges",
               ]}
             />
 
@@ -145,7 +160,7 @@ export function CriminalActivity({ onComplete }: { onComplete?: () => void }) {
                 "Victim complaints about similar wallet addresses",
                 "Transaction clusters leading to scam wallets",
                 "Fake exchanges suddenly withdrawing liquidity",
-                "Suspicious groups promoting unrealistic returns"
+                "Suspicious groups promoting unrealistic returns",
               ]}
             />
 
@@ -157,7 +172,7 @@ export function CriminalActivity({ onComplete }: { onComplete?: () => void }) {
                 "Large transactions with no verifiable source",
                 "Use of non-KYC compliant exchanges",
                 "Frequent transactions through known laundering wallets",
-                "Structured transactions below reporting thresholds"
+                "Structured transactions below reporting thresholds",
               ]}
             />
           </div>
@@ -183,20 +198,24 @@ export function CriminalActivity({ onComplete }: { onComplete?: () => void }) {
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
             Conclusion: Detecting Criminal Activity
           </h2>
-          
+
           <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Key Takeaways:</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Key Takeaways:
+            </h3>
             <div className="space-y-3">
               <div className="flex items-start gap-2">
                 <ArrowRight className="w-4 h-4 text-blue-500 flex-shrink-0 mt-1" />
                 <span className="text-gray-600">
-                  Monitor transaction patterns and amounts for suspicious activity
+                  Monitor transaction patterns and amounts for suspicious
+                  activity
                 </span>
               </div>
               <div className="flex items-start gap-2">
                 <ArrowRight className="w-4 h-4 text-blue-500 flex-shrink-0 mt-1" />
                 <span className="text-gray-600">
-                  Pay attention to wallet addresses linked to known criminal activity
+                  Pay attention to wallet addresses linked to known criminal
+                  activity
                 </span>
               </div>
               <div className="flex items-start gap-2">
