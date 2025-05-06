@@ -138,7 +138,7 @@ export function BlockchainFundamentals({ onComplete }: { onComplete?: () => void
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
             Knowledge Check: Understanding Blockchain Technology
           </h2>
-          <QuizCard questions={quizQuestions} moduleId="crypto_basics" />
+          <QuizCard questions={quizQuestions} moduleId="blockchain_fundamentals" />
         </section>
 
         {blockchainChapter && (

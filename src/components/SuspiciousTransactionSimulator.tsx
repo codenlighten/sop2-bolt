@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { AlertTriangle, CheckCircle, XCircle, Search, ArrowRight, Shield, Database, Building2, Wallet, Globe, Link, FileText } from 'lucide-react';
+import { useState } from 'react';
+import { AlertTriangle, Search, ArrowRight, Shield, Building2, Wallet, Globe, Link, FileText } from 'lucide-react';
+import { useProgress } from '../context/ProgressContext';
 
 interface Transaction {
   id: string;
@@ -189,6 +190,7 @@ export function SuspiciousTransactionSimulator() {
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
   const [showInvestigationNotes, setShowInvestigationNotes] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const { updateSimulationScore } = useProgress();
 
   const handleTransactionSelect = (txId: string) => {
     if (!submitted) {
@@ -212,8 +214,10 @@ export function SuspiciousTransactionSimulator() {
         correct++;
       }
     });
-    setScore((correct / transactions.length) * 100);
+    const finalScore = (correct / transactions.length) * 100;
+    setScore(finalScore);
     setSubmitted(true);
+    updateSimulationScore('suspicious_transaction', finalScore);
   };
 
   const handleReset = () => {

@@ -36,7 +36,8 @@ export const badges: Badge[] = [
     icon: 'Search',
     requirements: [
       { type: 'simulation', threshold: 90, moduleId: 'transaction_pattern' },
-      { type: 'exercise', threshold: 85, moduleId: 'suspicious_transaction' }
+      { type: 'exercise', threshold: 85, moduleId: 'suspicious_transaction' },
+      { type: 'quiz', threshold: 80, moduleId: 'criminal_activity' }
     ],
     tier: 'gold',
     points: 50

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { AlertTriangle, CheckCircle, XCircle, ArrowRight, Search, Shield, Database, Building2, Wallet, Globe, Link, FileText } from 'lucide-react';
+import { useState } from 'react';
+import { AlertTriangle, ArrowRight, Search, Shield, Building2, Wallet, Link } from 'lucide-react';
+import { useProgress } from '../context/ProgressContext';
 
 interface Transaction {
   id: string;
@@ -156,6 +157,7 @@ export function TransactionPatternGame() {
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
   const [score, setScore] = useState(0);
   const [showRelated, setShowRelated] = useState(false);
+  const { updateSimulationScore } = useProgress();
 
   const handleTransactionSelect = (id: string) => {
     if (!submitted) {
@@ -179,8 +181,10 @@ export function TransactionPatternGame() {
         correct++;
       }
     });
-    setScore((correct / sampleTransactions.length) * 100);
+    const finalScore = (correct / sampleTransactions.length) * 100;
+    setScore(finalScore);
     setSubmitted(true);
+    updateSimulationScore('transaction_pattern', finalScore);
   };
 
   const handleReset = () => {
