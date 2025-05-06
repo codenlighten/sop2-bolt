@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Brain, Shield, AlertTriangle, CheckCircle, XCircle, ArrowRight, Database, Search, Globe, Lock } from 'lucide-react';
+import { useProgress } from '../context/ProgressContext';
 
 interface Threat {
   id: string;
@@ -204,9 +205,9 @@ const countermeasures: Countermeasure[] = [
 ];
 
 export function EmergingThreatsSimulator() {
+  const { updateSimulationScore } = useProgress();
   const [selectedThreat, setSelectedThreat] = useState<Threat | null>(null);
   const [selectedCountermeasures, setSelectedCountermeasures] = useState<Set<string>>(new Set());
-  const [showResult, setShowResult] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showDetails, setShowDetails] = useState<'impact' | 'detection' | 'mitigation' | 'examples' | null>(null);
   const [showImplementation, setShowImplementation] = useState(false);
@@ -227,6 +228,10 @@ export function EmergingThreatsSimulator() {
 
   const handleSubmit = () => {
     setSubmitted(true);
+    if (selectedThreat) { 
+      const { score } = calculateEffectiveness();
+      updateSimulationScore('emerging_threats', score); 
+    }
   };
 
   const handleReset = () => {

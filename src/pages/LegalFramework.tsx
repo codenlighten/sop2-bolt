@@ -1,19 +1,12 @@
-import React from 'react';
 import { CourtroomSimulation } from '../components/CourtroomSimulation';
 import { QuizCard } from '../components/QuizCard';
 import {
   Scale,
-  AlertTriangle,
   ArrowRight,
   FileText,
   Shield,
   Globe,
   Lock,
-  BadgeCheck,
-  Building2,
-  Gavel,
-  FileSearch,
-  Link
 } from 'lucide-react';
 
 const quizQuestions = [
@@ -75,7 +68,7 @@ export function LegalFramework({ onComplete }: LegalFrameworkProps) {
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
             9.2 Knowledge Check: Legal Framework
           </h2>
-          <QuizCard questions={quizQuestions} moduleId="legal_framework" />
+          <QuizCard questions={quizQuestions} moduleId="legal" />
         </section>
 
         <section className="mb-12">

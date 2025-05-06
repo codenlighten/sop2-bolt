@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Gavel, AlertTriangle, CheckCircle, XCircle, ArrowRight, FileText, Scale, Shield } from 'lucide-react';
+import { useState } from 'react';
+import { AlertTriangle, CheckCircle, ArrowRight, Scale } from 'lucide-react';
+import { useProgress } from '../context/ProgressContext';
 
 interface Evidence {
   id: string;
@@ -138,10 +139,11 @@ const cases: Case[] = [
 ];
 
 export function CourtroomSimulation() {
+  const { updateSimulationScore } = useProgress();
   const [selectedCase, setSelectedCase] = useState<Case | null>(null);
   const [selectedEvidence, setSelectedEvidence] = useState<Set<string>>(new Set());
   const [caseStatuses, setCaseStatuses] = useState<Record<string, Case['status']>>(
-    cases.reduce((acc, c) => ({ ...acc, [c.id]: c.status }), {})
+    cases.reduce((acc, c) => ({ ...acc, [c.id]: c.status }), {} as Record<string, Case['status']>)
   );
   const [showLegalAnalysis, setShowLegalAnalysis] = useState(false);
   const [showTechnicalDetails, setShowTechnicalDetails] = useState(false);
@@ -164,20 +166,22 @@ export function CourtroomSimulation() {
         id => availableEvidence.find(e => e.id === id)?.name
       );
       
-      if (selectedCase.requiredEvidence.every(required => 
+      if (selectedCase.requiredEvidence.every((required: string) => 
         selectedEvidenceNames.includes(required)
       )) {
-        setCaseStatuses(prev => ({
+        setCaseStatuses((prev: Record<string, Case['status']>) => ({
           ...prev,
           [selectedCase.id]: 'complete'
         }));
+        // Report score when a case is completed
+        updateSimulationScore('courtroom', 100); 
       } else if (newSelected.size > 0) {
-        setCaseStatuses(prev => ({
+        setCaseStatuses((prev: Record<string, Case['status']>) => ({
           ...prev,
           [selectedCase.id]: 'in_progress'
         }));
       } else {
-        setCaseStatuses(prev => ({
+        setCaseStatuses((prev: Record<string, Case['status']>) => ({
           ...prev,
           [selectedCase.id]: 'pending'
         }));

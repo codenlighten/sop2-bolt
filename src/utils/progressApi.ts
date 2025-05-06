@@ -79,6 +79,50 @@ export async function getCertificate(certificateId: string): Promise<any> {
 }
 
 /**
+ * Downloads a certificate PDF by its ID.
+ * @param {string} certificateId
+ * @param {string} courseTitle The title of the course, used for the downloaded filename.
+ */
+export async function downloadCertificatePdf(certificateId: string, courseTitle: string): Promise<void> {
+  try {
+    // Assuming the PDF download endpoint is /api/certificates/:certificateId/pdf
+    // Adjust if the actual endpoint is different (e.g., uses a query param on the main endpoint)
+    const url = `${API_BASE}/certificates/${encodeURIComponent(certificateId)}/pdf`;
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      // Try to get more specific error from response if possible
+      let errorDetails = res.statusText;
+      try {
+        const errorData = await res.json();
+        if (errorData && errorData.message) {
+          errorDetails = errorData.message;
+        }
+      } catch (jsonError) {
+        // If response is not JSON, use the original status text
+      }
+      throw new Error(`Failed to download certificate PDF: ${errorDetails}`);
+    }
+
+    const blob = await res.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    // Sanitize courseTitle for use in filename
+    const filename = `${courseTitle.replace(/[^a-z0-9_\-\[\]\s]/gi, '').replace(/\s+/g, '_')}_Certificate.pdf`;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(downloadUrl);
+  } catch (error) {
+    console.error(`Failed to download certificate PDF for ${certificateId}:`, error);
+    // Propagate the error so UI can display a message
+    throw error; 
+  }
+}
+
+/**
  * Sync local progress with the server
  * @param {string} email
  * @param {User['progress']} progress

@@ -35,6 +35,16 @@ export function CertificatesPage() {
         }
         
         const data = await response.json();
+        // Log the raw data received from the API
+        console.log('Fetched certificates data from API:', data);
+        // Specifically log the certificates array if it exists
+        if (data && data.certificates) {
+          console.log('Certificates array:', data.certificates);
+          // Log the first certificate to see its structure, if available
+          if (data.certificates.length > 0) {
+            console.log('First certificate object:', data.certificates[0]);
+          }
+        }
         setCertificates(data.certificates || []);
       } catch (err) {
         console.error('Error fetching certificates:', err);

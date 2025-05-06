@@ -1,6 +1,8 @@
 // Removed unused React import
-import { Award, Download, ExternalLink, Shield } from 'lucide-react';
+import { Award, Download, ExternalLink, Shield, Loader2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { downloadCertificatePdf } from '../utils/progressApi';
+import { useState } from 'react';
 
 interface CertificateCardProps {
   certificateId: string;
@@ -20,6 +22,8 @@ export function CertificateCard({
   userEmail
 }: CertificateCardProps) {
   const { user } = useAuth();
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return 'N/A';
@@ -33,6 +37,22 @@ export function CertificateCard({
   const viewOnChain = () => {
     if (transactionId) {
       window.open(`https://whatsonchain.com/tx/${transactionId}`, '_blank');
+    }
+  };
+
+  const handleDownloadClick = async () => {
+    setIsDownloading(true);
+    setDownloadError(null);
+    try {
+      await downloadCertificatePdf(certificateId, title);
+    } catch (error) {
+      console.error('Download failed:', error);
+      const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+      setDownloadError(`Failed to download: ${errorMessage}`);
+      // For a quick UI feedback, an alert can be used. A toast notification system would be better for production.
+      alert(`Failed to download certificate: ${errorMessage}`); 
+    } finally {
+      setIsDownloading(false);
     }
   };
 
@@ -75,17 +95,7 @@ export function CertificateCard({
             <div>
               <div className="text-sm font-medium text-gray-500">Blockchain Verification</div>
               <div className="font-medium text-gray-900">
-                {transactionId ? (
-                  <button 
-                    onClick={viewOnChain}
-                    className="text-blue-600 hover:text-blue-700 flex items-center gap-1 text-sm"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    <span>View on Chain</span>
-                  </button>
-                ) : (
-                  <span className="text-gray-500">Pending</span>
-                )}
+                {transactionId ? 'Verified' : 'Pending'}
               </div>
             </div>
           </div>
@@ -106,16 +116,32 @@ export function CertificateCard({
       
       {/* Certificate Actions */}
       <div className="border-t border-gray-200 p-4 bg-gray-50">
-        <div className="flex justify-end">
+        <div className="flex justify-end gap-3">
+          {transactionId && (
+            <button
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2 disabled:opacity-50"
+              onClick={viewOnChain}
+              disabled={isDownloading} // Also disable if a download is in progress to avoid UI confusion
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span>View on Chain</span>
+            </button>
+          )}
           <button
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2"
-            onClick={viewOnChain}
-            disabled={!transactionId}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50"
+            onClick={handleDownloadClick} 
+            disabled={isDownloading} 
           >
-            <Download className="w-4 h-4" />
-            <span>Download Certificate</span>
+            {isDownloading ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /><span>Downloading...</span></>
+            ) : (
+              <><Download className="w-4 h-4" /><span>Download PDF</span></>
+            )}
           </button>
         </div>
+        {downloadError && (
+          <p className="text-red-500 text-sm text-right mt-2">{downloadError}</p>
+        )}
       </div>
     </div>
   );

@@ -133,7 +133,7 @@ export function InternationalCooperation({ onComplete }: { onComplete?: () => vo
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">
             6.3 Knowledge Check: International Cooperation
           </h2>
-          <QuizCard questions={quizQuestions} moduleId="international_cooperation" />
+          <QuizCard questions={quizQuestions} moduleId="international" />
         </section>
 
         <section className="mb-12">

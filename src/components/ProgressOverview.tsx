@@ -1,23 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { useProgress } from '../context/ProgressContext';
-import { BadgeDisplay } from './BadgeDisplay';
-import { CertificateDisplay } from './CertificateDisplay';
-import { AnalyticsDashboard } from './AnalyticsDashboard';
-import { ExportProgress } from './ExportProgress';
-import { Shield, Award, ArrowRight, CheckCircle, Book, Clock, Brain, Loader } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
-import { checkCompletion } from '../utils/progressApi';
+import { useEffect, useState } from "react";
+import { useProgress } from "../context/ProgressContext";
+import { BadgeDisplay } from "./BadgeDisplay";
+import { CertificateDisplay } from "./CertificateDisplay";
+import { AnalyticsDashboard } from "./AnalyticsDashboard";
+import { ExportProgress } from "./ExportProgress";
+import { Award, CheckCircle, Book, Brain, Loader } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { checkCompletion } from "../utils/progressApi";
 
 export function ProgressOverview() {
-  const { 
+  const {
     progress,
     earnedBadges,
     earnedCertificates,
-    checkBadgeEligibility,
-    checkCertificateEligibility
+    checkCertificateEligibility,
   } = useProgress();
   const { user } = useAuth();
-  const [serverCompletion, setServerCompletion] = useState<{ completed: boolean; date?: string } | null>(null);
+  const [serverCompletion, setServerCompletion] = useState<{
+    completed: boolean;
+    date?: string;
+  } | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -28,7 +30,7 @@ export function ProgressOverview() {
           const completionStatus = await checkCompletion(user.email);
           setServerCompletion(completionStatus);
         } catch (error) {
-          console.error('Error fetching completion status:', error);
+          console.error("Error fetching completion status:", error);
         } finally {
           setLoading(false);
         }
@@ -39,13 +41,14 @@ export function ProgressOverview() {
   }, [user]);
 
   const calculateBadgeProgress = (badgeId: string) => {
-    const badge = earnedBadges.find(b => b.id === badgeId);
+    const badge = earnedBadges.find((b) => b.id === badgeId);
     if (!badge) return 0;
 
-    const metRequirements = badge.requirements.filter(req => {
-      const score = req.type === 'quiz'
-        ? progress.quizScores[req.moduleId]
-        : progress.simulationScores[req.moduleId];
+    const metRequirements = badge.requirements.filter((req) => {
+      const score =
+        req.type === "quiz"
+          ? progress.quizScores[req.moduleId]
+          : progress.simulationScores[req.moduleId];
       return score >= req.threshold;
     }).length;
 
@@ -62,7 +65,7 @@ export function ProgressOverview() {
     <div className="space-y-8">
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Your Progress</h2>
-        
+
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
@@ -71,7 +74,8 @@ export function ProgressOverview() {
               <h3 className="font-medium text-blue-900">Chapters</h3>
             </div>
             <p className="text-2xl font-semibold text-blue-700">
-              {progress.completedChapters.length} / 10
+              {progress.completedChapters.length} / 10 (
+              {calculateOverallProgress()}%)
             </p>
           </div>
 
@@ -81,7 +85,7 @@ export function ProgressOverview() {
               <h3 className="font-medium text-purple-900">Badges</h3>
             </div>
             <p className="text-2xl font-semibold text-purple-700">
-              {earnedBadges.length} / 10
+              {earnedBadges.length} / 4
             </p>
           </div>
 
@@ -93,10 +97,13 @@ export function ProgressOverview() {
             <p className="text-2xl font-semibold text-green-700">
               {Object.values(progress.quizScores).length > 0
                 ? Math.round(
-                    Object.values(progress.quizScores).reduce((a, b) => a + b, 0) /
-                    Object.values(progress.quizScores).length
+                    Object.values(progress.quizScores).reduce(
+                      (a, b) => a + b,
+                      0
+                    ) / Object.values(progress.quizScores).length
                   )
-                : 0}%
+                : 0}
+              %
             </p>
           </div>
         </div>
@@ -104,35 +111,66 @@ export function ProgressOverview() {
         {/* Server Completion Status */}
         {user?.email && (
           <div className="mb-8">
-            <div className={`p-4 rounded-lg border ${
-              loading 
-                ? 'bg-gray-50 border-gray-200' 
-                : serverCompletion?.completed 
-                  ? 'bg-green-50 border-green-200' 
-                  : 'bg-blue-50 border-blue-200'
-            }`}>
+            <div
+              className={`p-4 rounded-lg border ${
+                loading
+                  ? "bg-gray-50 border-gray-200"
+                  : earnedCertificates.length > 0 || serverCompletion?.completed
+                  ? "bg-green-50 border-green-200"
+                  : "bg-blue-50 border-blue-200"
+              }`}
+            >
               <div className="flex items-center gap-3">
                 {loading ? (
                   <Loader className="w-5 h-5 text-gray-500 animate-spin" />
-                ) : serverCompletion?.completed ? (
+                ) : earnedCertificates.length > 0 ||
+                  serverCompletion?.completed ? (
                   <CheckCircle className="w-5 h-5 text-green-600" />
                 ) : (
                   <Award className="w-5 h-5 text-blue-600" />
                 )}
                 <div>
                   <h4 className="font-medium text-gray-900">
-                    {loading 
-                      ? 'Checking completion status...' 
-                      : serverCompletion?.completed 
-                        ? 'Course Completed!' 
-                        : 'Course Progress'}
+                    {loading
+                      ? "Checking completion status..."
+                      : earnedCertificates.length > 0 ||
+                        serverCompletion?.completed
+                      ? "Course Completed!"
+                      : "Course Progress"}
                   </h4>
                   <p className="text-gray-600">
-                    {loading 
-                      ? 'Retrieving your latest progress from the server...' 
-                      : serverCompletion?.completed 
-                        ? `Completed on ${new Date(serverCompletion.date || '').toLocaleDateString()}` 
-                        : 'Your progress is being synced with the server.'}
+                    {loading
+                      ? "Retrieving your latest progress from the server..."
+                      : (() => {
+                          let completionDateString = "";
+                          if (
+                            earnedCertificates.length > 0 &&
+                            earnedCertificates[0].issueDate
+                          ) {
+                            completionDateString = new Date(
+                              earnedCertificates[0].issueDate
+                            ).toLocaleDateString();
+                          } else if (
+                            serverCompletion?.completed &&
+                            serverCompletion.date
+                          ) {
+                            completionDateString = new Date(
+                              serverCompletion.date
+                            ).toLocaleDateString();
+                          }
+
+                          if (completionDateString) {
+                            return `Completed on ${completionDateString}`;
+                          } else if (
+                            earnedCertificates.length > 0 ||
+                            serverCompletion?.completed
+                          ) {
+                            // This case implies completion but no date, which might be unlikely with new logic
+                            // but good to have a fallback message.
+                            return "Completion date not available.";
+                          }
+                          return "Your progress is being synced with the server.";
+                        })()}
                   </p>
                 </div>
               </div>
@@ -147,7 +185,9 @@ export function ProgressOverview() {
 
         {/* Analytics Dashboard */}
         <div className="mb-8">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Learning Analytics</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">
+            Learning Analytics
+          </h3>
           <AnalyticsDashboard />
         </div>
 
@@ -155,7 +195,7 @@ export function ProgressOverview() {
         <div className="mb-8">
           <h3 className="text-xl font-semibold text-gray-900 mb-4">Badges</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {earnedBadges.map(badge => (
+            {earnedBadges.map((badge) => (
               <BadgeDisplay
                 key={badge.id}
                 badge={badge}
@@ -168,19 +208,24 @@ export function ProgressOverview() {
 
         {/* Certificates Section */}
         <div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-4">Certificates</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-4">
+            Certificates
+          </h3>
           <div className="space-y-4">
-            {earnedCertificates.map(certificate => (
+            {earnedCertificates.map((certificate) => (
               <CertificateDisplay
                 key={certificate.id}
                 certificate={certificate}
                 earned={checkCertificateEligibility(certificate.id)}
                 progress={{
                   earnedBadges: earnedBadges.length,
-                  totalScore: Object.values(progress.quizScores).length > 0
-                    ? Object.values(progress.quizScores).reduce((a, b) => a + b, 0) / 
-                      Object.values(progress.quizScores).length
-                    : 0
+                  totalScore:
+                    Object.values(progress.quizScores).length > 0
+                      ? Object.values(progress.quizScores).reduce(
+                          (a, b) => a + b,
+                          0
+                        ) / Object.values(progress.quizScores).length
+                      : 0,
                 }}
               />
             ))}

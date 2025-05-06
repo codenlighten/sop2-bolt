@@ -127,6 +127,8 @@ export interface Certificate {
   title: string;
   /** Certificate description */
   description: string;
+  /** Date the certificate was issued */
+  issueDate?: string;
   /** Requirements to earn the certificate */
   requirements: {
     /** Minimum number of badges needed */

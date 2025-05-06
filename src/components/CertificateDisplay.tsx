@@ -1,4 +1,3 @@
-import React from 'react';
 import { Certificate as CertificateType } from '../types';
 import { Shield, Award, CheckCircle } from 'lucide-react';
 
@@ -57,6 +56,11 @@ export function CertificateDisplay({ certificate, earned = false, progress }: Ce
                 <CheckCircle className="w-5 h-5" />
                 <span>Certificate Earned!</span>
               </div>
+              {certificate.issueDate && (
+                <p className="text-sm text-green-600 mt-1">
+                  Issued on: {new Date(certificate.issueDate).toLocaleDateString()}
+                </p>
+              )}
             </div>
           )}
         </div>

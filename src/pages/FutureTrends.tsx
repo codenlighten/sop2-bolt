@@ -6,13 +6,8 @@ import {
   AlertTriangle, 
   ArrowRight, 
   Database, 
-  Shield, 
   Lock, 
-  Globe, 
-  Laptop, 
-  Cuboid as Cube, 
-  Fingerprint, 
-  BadgeCheck 
+  Cuboid as Cube
 } from 'lucide-react';
 
 const quizQuestions = [
@@ -213,7 +208,7 @@ export function FutureTrends({ onComplete }: { onComplete?: () => void }) {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Shield className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <div className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-gray-900">Network Security</h4>
                   <p className="text-gray-600">
@@ -222,7 +217,7 @@ export function FutureTrends({ onComplete }: { onComplete?: () => void }) {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Globe className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <div className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-gray-900">Global Impact</h4>
                   <p className="text-gray-600">
@@ -239,7 +234,7 @@ export function FutureTrends({ onComplete }: { onComplete?: () => void }) {
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
-                <Fingerprint className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <div className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-yellow-900">Monitor Development</h4>
                   <p className="text-yellow-800">
@@ -248,7 +243,7 @@ export function FutureTrends({ onComplete }: { onComplete?: () => void }) {
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <BadgeCheck className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <div className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-yellow-900">Prepare for Transition</h4>
                   <p className="text-yellow-800">
@@ -257,7 +252,7 @@ export function FutureTrends({ onComplete }: { onComplete?: () => void }) {
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <Shield className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <div className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-yellow-900">Update Security</h4>
                   <p className="text-yellow-800">
@@ -278,7 +273,7 @@ export function FutureTrends({ onComplete }: { onComplete?: () => void }) {
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Action Steps</h3>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <Laptop className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-gray-900">Invest in Advanced Tools</h4>
                   <p className="text-gray-600">
@@ -287,7 +282,7 @@ export function FutureTrends({ onComplete }: { onComplete?: () => void }) {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Brain className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-gray-900">Continuous Training</h4>
                   <p className="text-gray-600">
@@ -296,7 +291,7 @@ export function FutureTrends({ onComplete }: { onComplete?: () => void }) {
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Globe className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                <div className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-medium text-gray-900">International Cooperation</h4>
                   <p className="text-gray-600">

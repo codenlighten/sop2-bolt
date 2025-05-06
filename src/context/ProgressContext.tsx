@@ -11,6 +11,7 @@ interface ProgressContextType {
   updateQuizScore: (moduleId: string, score: number) => void;
   updateSimulationScore: (moduleId: string, score: number) => void;
   completeChapter: (chapterId: string) => void;
+  completeExercise: (exerciseId: string) => void;
   checkBadgeEligibility: (badgeId: string) => boolean;
   checkCertificateEligibility: (certificateId: string) => boolean;
   earnedBadges: Badge[];
@@ -173,15 +174,42 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  const completeExercise = (exerciseId: string) => {
+    if (!exerciseId || exerciseId === 'undefined') {
+      console.error('Invalid exerciseId provided to completeExercise:', exerciseId);
+      return;
+    }
+
+    setProgress(prev => {
+      if (prev.completedExercises.includes(exerciseId)) {
+        return prev;
+      }
+      return {
+        ...prev,
+        completedExercises: [...prev.completedExercises, exerciseId],
+      };
+    });
+  };
+
   const checkBadgeEligibility = (badgeId: string) => {
     const badge = badges.find(b => b.id === badgeId);
     if (!badge) return false;
 
     return badge.requirements.every(req => {
-      const score = req.type === 'quiz' 
-        ? progress.quizScores[req.moduleId]
-        : progress.simulationScores[req.moduleId];
-      return score >= req.threshold;
+      if (req.type === 'quiz') {
+        const score = progress.quizScores[req.moduleId];
+        return score >= req.threshold;
+      } else if (req.type === 'simulation') {
+        const score = progress.simulationScores[req.moduleId];
+        return score >= req.threshold;
+      } else if (req.type === 'exercise') {
+        // For exercises, we check if the moduleId is in completedExercises
+        // The 'threshold' for exercises in badges.ts currently implies a score,
+        // but UserProgress.completedExercises is just an array of strings (IDs).
+        // This implementation assumes completion is sufficient for the badge.
+        return progress.completedExercises.includes(req.moduleId);
+      }
+      return false; // Should not happen if badge types are constrained
     });
   };
 
@@ -211,40 +239,50 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     return averageScore >= certificate.requirements.minTotalScore;
   };
 
-  // Check for new badges after scores update or chapter completion
+  // Auto-award badges
   useEffect(() => {
+    const newlyEarnedThisCycle: string[] = [];
+
     badges.forEach(badge => {
-      if (!progress.earnedBadges.includes(badge.id) && checkBadgeEligibility(badge.id)) {
-        setProgress(prev => ({
-          ...prev,
-          earnedBadges: [...prev.earnedBadges, badge.id]
-        }));
-        
-        // Track badge progress on server if user is logged in
+      // If already in progress.earnedBadges, skip (it's not "newly" earned in this cycle)
+      if (progress.earnedBadges.includes(badge.id)) {
+        return;
+      }
+
+      // Check eligibility using the correctly updated checkBadgeEligibility function
+      if (checkBadgeEligibility(badge.id)) {
+        newlyEarnedThisCycle.push(badge.id);
         if (user?.email) {
-          trackBadgeProgress(user.email, badge.id, 100).catch(error => {
-            console.error(`Failed to track badge progress for ${badge.id}:`, error);
-          });
-        }
-      } else if (!progress.earnedBadges.includes(badge.id) && user?.email) {
-        // Calculate partial progress for badges not yet earned
-        const metRequirements = badge.requirements.filter(req => {
-          const score = req.type === 'quiz' 
-            ? progress.quizScores[req.moduleId]
-            : progress.simulationScores[req.moduleId];
-          return score >= req.threshold;
-        }).length;
-        
-        const totalRequirements = badge.requirements.length;
-        if (totalRequirements > 0 && metRequirements > 0) {
-          const progressPercentage = Math.round((metRequirements / totalRequirements) * 100);
-          trackBadgeProgress(user.email, badge.id, progressPercentage).catch(error => {
-            console.error(`Failed to track badge progress for ${badge.id}:`, error);
-          });
+          // If eligible AND user is logged in, track completion on server
+          trackBadgeProgress(user.email, badge.id, 100)
+            .catch(err => console.error(`Failed to track badge ${badge.id} progress on server:`, err));
         }
       }
     });
-  }, [progress.quizScores, progress.simulationScores, progress.completedChapters, user]);
+
+    // If there are any badges newly earned in this cycle, update the state
+    if (newlyEarnedThisCycle.length > 0) {
+      setProgress(prev => {
+        // Add the newly earned badges to the existing set of earned badges
+        const updatedEarnedBadges = Array.from(new Set([...prev.earnedBadges, ...newlyEarnedThisCycle]));
+        // Only update if there's an actual change to avoid unnecessary re-renders
+        if (updatedEarnedBadges.length > prev.earnedBadges.length) {
+          return { ...prev, earnedBadges: updatedEarnedBadges };
+        }
+        return prev;
+      });
+    }
+  }, [
+    // Dependencies: checkBadgeEligibility itself, and all parts of 'progress' it reads,
+    // plus 'progress.earnedBadges' for the initial check, and 'user' for API calls.
+    checkBadgeEligibility, // The function from the provider scope
+    progress.quizScores,
+    progress.simulationScores,
+    progress.completedExercises,
+    progress.earnedBadges, 
+    user
+    // 'badges' is a top-level import, so it's stable and not needed in deps.
+  ]);
 
   // Check for course completion
   useEffect(() => {
@@ -294,6 +332,7 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       updateQuizScore,
       updateSimulationScore,
       completeChapter,
+      completeExercise,
       checkBadgeEligibility,
       checkCertificateEligibility,
       earnedBadges,

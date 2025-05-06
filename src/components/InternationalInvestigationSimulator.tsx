@@ -1,25 +1,20 @@
-import { useState } from 'react';
-import { Globe, AlertTriangle, CheckCircle, XCircle, ArrowRight, FileText, Scale, Shield, Building2, Search, Link, Clock, FileCheck, FileWarning } from 'lucide-react';
-
-// ... [keep all the interfaces and data exactly as is]
+import { useProgress } from '../context/ProgressContext';
 
 export function InternationalInvestigationSimulator() {
-  const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
-  const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
-  const [requestStatus, setRequestStatus] = useState<Record<string, 'pending' | 'submitted' | 'approved' | 'denied'>>({});
-  const [showResult, setShowResult] = useState(false);
-  const [showJurisdiction, setShowJurisdiction] = useState(false);
-  const [showDocumentation, setShowDocumentation] = useState(false);
-  const [showBestPractices, setShowBestPractices] = useState(false);
-
-  // ... [keep all the component implementation exactly as is]
+  const { updateSimulationScore } = useProgress();
 
   // Placeholder UI - Replace with actual simulator content
   return (
     <div className="p-4 border rounded-lg">
       <h3 className="text-lg font-semibold">International Investigation Simulator</h3>
-      <p className="text-gray-600">Simulator content goes here.</p>
-      {/* TODO: Implement the actual UI for the simulator based on the state variables above */}
+      <p className="text-gray-600">Simulator content goes here. (Full implementation pending)</p>
+      {/* TODO: Implement the actual UI for the simulator */}
+      <button
+        onClick={() => updateSimulationScore('international_request', 100)}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Mock Complete Simulation (Score 100 for 'international_request')
+      </button>
     </div>
   );
 }
