@@ -280,16 +280,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
           </div>
 
           {/* Tyler Fayard */}
-          <div className="flex flex-col md:flex-row gap-8 items-center">
-            {/* <div className="md:w-1/3">
-              <div className="relative">
-                <div className="absolute inset-0 bg-blue-600 rounded-full transform rotate-6"></div>
-                <div className="relative w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-200 flex items-center justify-center">
-                  <Search className="w-16 h-16 text-gray-400" />
-                </div>
-              </div>
-            </div> */}
-
+          {/* <div className="flex flex-col md:flex-row gap-8 items-center">
             <div className="md:w-3/3">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
                 Chief Cryptocurrency Forensics Investigator & Trainer
@@ -376,7 +367,7 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 </a>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
