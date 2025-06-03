@@ -206,19 +206,19 @@ export function LandingPage({ onStart }: LandingPageProps) {
         <div className="max-w-7xl mx-auto px-4">
           {/* Bryan Daugherty */}
           <div className="flex flex-col md:flex-row gap-8 items-center mb-16">
-            {/* <div className="md:w-1/3">
-              <div className="relative">
-                <div className="absolute inset-0 bg-blue-600 rounded-full transform -rotate-6"></div>
-                <div className="relative w-48 h-48 mx-auto rounded-full overflow-hidden border-4 border-white shadow-xl bg-gray-200 flex items-center justify-center">
-                  <Shield className="w-16 h-16 text-gray-400" />
-                </div>
-              </div>
-            </div> */}
-
+            {/* https://media.licdn.com/dms/image/v2/D4D03AQF_OrHUqBbBqQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1678541355576?e=1754524800&v=beta&t=I2K0zyDuLzfepPnLcYD3pOfw2veYVhGxzjdIl4dcLtc */}
             <div className="md:w-3/3">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
                 About the Author
               </h2>
+              {/* image to left side */}
+              <div className="mb-6 md:mb-0 md:w-1/5">
+                <img
+                  src="https://media.licdn.com/dms/image/v2/D4D03AQF_OrHUqBbBqQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1678541355576?e=1754524800&v=beta&t=I2K0zyDuLzfepPnLcYD3pOfw2veYVhGxzjdIl4dcLtc"
+                  alt="Bryan Daugherty"
+                  className="w-32 h-32 rounded-full mx-auto"
+                />
+              </div>
               <p className="text-gray-600 mb-6">
                 Bryan Daugherty is a trailblazer in blockchain innovation and
                 cybersecurity, with over 20 years in enterprise technology. As a
@@ -226,7 +226,6 @@ export function LandingPage({ onStart }: LandingPageProps) {
                 and Global Public Policy Director, he shapes blockchain policy
                 across 30+ countries and advises on cybersecurity.
               </p>
-
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex items-start gap-2">
                   <Briefcase className="w-5 h-5 text-gray-800 flex-shrink-0 mt-1" />
